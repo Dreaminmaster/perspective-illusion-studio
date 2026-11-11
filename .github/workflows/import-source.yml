@@ -41,7 +41,10 @@ jobs:
       - name: Generate scene stills and animated preview
         run: |
           set -euo pipefail
-          command -v ffmpeg
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
           mkdir -p assets/stills
           ffmpeg -nostdin -y -loglevel error -ss 0 -i examples/shibuya-demo.mp4 -frames:v 1 -q:v 2 assets/stills/01-flat.jpg
           ffmpeg -nostdin -y -loglevel error -ss 3.6 -i examples/shibuya-demo.mp4 -frames:v 1 -q:v 2 assets/stills/02-reveal.jpg
