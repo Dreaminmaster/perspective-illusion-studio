@@ -1,56 +1,104 @@
-# Perspective Illusion Studio｜透视错觉专属技能
+<div align="center">
 
-这是基于 [Simcraft Perspective Illusion](https://github.com/dotslashsimran/simcraft/tree/main/skills/video/perspective-illusion) 制作的可复用技能包。原作者为 Simran Sachdeva，采用 MIT 许可证。我们在涩谷十字路口项目中进一步调整了镜头、素材和渲染流程。
+<img src="assets/hero.svg" width="100%" alt="Perspective Illusion Studio 透视错觉工作室" />
 
-## 功能
+<br/><br/>
 
-- 将远景压缩为近似平面插画，随后通过真实的 Three.js 相机移动展开空间。
-- 主要变化：**2° 长焦 → 78°/84° 广角**；另有 **30° 侧向视角，3° → 58° 展开**。
-- 支持夜景、广告屏、日文招牌、行人、交通工具、潮湿道路等可编辑元素。
-- 明确区分快速预览和高质量渲染，避免用运动插帧制造模糊与重影。
-- 含完整演示视频、12 张素材、GitHub Actions 自动文件检查。
+**让一张平面的城市插画，在镜头移动中展开真正的三维空间。**
 
-## 使用方法
+<br/>
 
-1. 下载仓库，打开根目录的 [SKILL.md](SKILL.md) 供支持技能文件的编程助手读取。
-2. 电脑准备 Node.js 22 或更新版本、Chrome 和 ffmpeg。
-3. 执行：
+[**▶ 观看东京涩谷成品**](examples/shibuya-demo.mp4) &nbsp;·&nbsp;
+[**技能说明 SKILL.md**](SKILL.md) &nbsp;·&nbsp;
+[**English README**](README.md)
 
-```bash
+</div>
+
+<br/>
+
+# Perspective Illusion Studio · 透视错觉工作室
+
+这是一套可以实际运行、修改并重复使用的 **Three.js 透视错觉视频制作技能**。
+
+利用远距离超长焦镜头，把不同深度的街道、建筑和行人视觉上压缩成一张平面插画；随后镜头向前移动、视角逐渐扩大，原先隐藏的纵深就会突然显现。**画面变化来自真正的三维相机运动，而不是 AI 图片切换。**
+
+## 🎬 最新作品 · 东京涩谷十字路口
+
+<div align="center">
+
+<a href="examples/shibuya-demo.mp4"><img src="assets/shibuya-loop.gif" width="90%" alt="东京涩谷透视错觉三维动画" /></a>
+
+<br/>
+
+**[▶ 点击观看 / 下载完整的 10 秒 MP4](examples/shibuya-demo.mp4)**
+
+<sub>Three.js 原生三维渲染 · 非运动插帧 · 日系雨夜商业街</sub>
+
+</div>
+
+<br/>
+
+<table>
+<thead><tr><th width="33%">01 · 长焦压缩</th><th width="33%">02 · 广角展开</th><th width="33%">03 · 侧面透视</th></tr></thead>
+<tbody><tr>
+<td><img src="assets/stills/01-flat.jpg" alt="长焦压缩后的涩谷街景" /></td>
+<td><img src="assets/stills/02-reveal.jpg" alt="广角展开后的涩谷斑马线" /></td>
+<td><img src="assets/stills/03-corner.jpg" alt="涩谷十字路口侧面视角" /></td>
+</tr><tr>
+<td><sub>2° 超长焦，空间看起来几乎是平面的</sub></td>
+<td><sub>78°–84° 广角，街道纵深逐渐显现</sub></td>
+<td><sub>侧向约 30°，再完成第二次透视展开</sub></td>
+</tr></tbody>
+</table>
+
+## 这次我们改进了什么？
+
+| 重点 | 共同改进 |
+| :-- | :-- |
+| **更强的视觉错觉** | 把正面镜头调整为 **2° → 78°/84°**，让远景和近景的差异更明显 |
+| **第二次透视展开** | 加入约 **30°** 的侧向镜头，由 **3° → 58°** 展开 |
+| **减少模糊** | 去掉容易让人、广告屏和建筑边缘变形的运动插帧 |
+| **细节与画质** | 降低过强的雨丝和发光效果，保留真实三维的灯光、行人和建筑层次 |
+| **可复用制作流程** | 把镜头、素材、渲染和检查规则整理成独立的 **SKILL.md** |
+
+**成品实际规格：** 1280 × 720、15 FPS、H.264、10 秒。每一帧由真实三维场景渲染；细线仍可能存在轻微闪烁。更高的原生帧率和抗锯齿质量需要较强的 GPU 重新渲染。
+
+> **场景说明：** 这是以涩谷十字路口为灵感的艺术化场景，并不是对真实建筑位置的精确复原。
+
+## ⚡ 开始使用
+
+**环境要求：** Node.js 22+、Google Chrome / Chromium、FFmpeg 和 WebGL。建议在具备硬件图形加速的电脑上制作最终版本。
+
+~~~bash
+git clone https://github.com/Dreaminmaster/perspective-illusion-studio.git
+cd perspective-illusion-studio
+
 npm ci
 npm test
 npm run preview
-```
 
-4. 高质量本机渲染：`npm run render:crisp`（建议使用具备硬件图形加速的电脑）。
+# 采用更清晰的原生三维采样渲染
+npm run render:crisp
+~~~
 
-**注意：** 示例视频是 **720p、15 FPS、10 秒**，不是高帧率成品。它已避免运动插帧拖影，但部分细线仍可能闪烁。真实的 24–30 FPS 输出要重新进行三维渲染，不应靠补帧冒充。
+建议先阅读 **[SKILL.md](SKILL.md)**，再配合 [镜头设计与调整依据](references/camera-design.md) 和 [画质检查流程](references/quality-checks.md) 开始制作。
 
-## 示例命令
+### 一个新的使用示例
 
-将项目提供给编程助手并说明：
+> 阅读此仓库的 SKILL.md，把涩谷场景替换成京都车站。开头用超长焦把站台和列车压缩成平面插画，再通过真实的镜头移动展开三维空间。先输出长焦、广角、侧向三个关键画面，检查后再生成完整循环视频。
 
-> 请阅读这个仓库的 SKILL.md，沿用其 Three.js 真实透视镜头、材质和清晰渲染流程，制作一段新的 10 秒循环影片：场景为东京夜晚街道，前 2 秒看起来像一张画，随后透视明显展开，最后回到初始画面。先给我三个关键时间点的截图，确认镜头变化后，再渲染视频。保留源文件和完整许可信息。
+这是一套**可供 AI 编程助手读取的技能源码工程**；单纯收藏或导入仓库，不代表它已经永久安装到 ChatGPT 内部。
 
-## 文件
+## 原作者与许可
 
-- `SKILL.md`：完整技能工作流程。
-- `scene.html`：可编辑的 Three.js 三维场景。
-- `render.mjs`：不使用时间补帧的清晰渲染。
-- `render_fast.mjs`：原技能演进的多重采样渲染。
-- `cutouts/`：12 张角色与广告素材。
-- `examples/`：视频及关键镜头对比图。
-- `references/`：镜头设计和质量检查。
-- `CREDITS.md`、`LICENSE`：来源说明及许可证。
+本项目基于 **[Simcraft · perspective-illusion](https://github.com/dotslashsimran/simcraft/tree/main/skills/video/perspective-illusion)** 开发，原作者 **Simran Sachdeva**，采用 MIT 许可证。
 
-这个 ZIP 不是自动安装到 ChatGPT 账号中的插件；它是一套可直接放入 GitHub，并提供给支持 SKILL.md 的助手使用的技能工程。
+由 **[Dreaminmaster](https://github.com/Dreaminmaster) 与 ChatGPT** 在涩谷示例中共同改进了镜头设计、画面清晰度和交付流程。我们保留原项目的作者署名与许可信息，详情见 [CREDITS.md](CREDITS.md)。
 
-## 发布到 GitHub（只会发布到指定账户）
+<div align="center">
 
-已提供一份防误操作脚本。先安装并登录 GitHub CLI（`gh auth login`），然后在项目根目录运行：
+---
 
-```bash
-bash scripts/publish-github.sh ScottH1122
-```
+<sub>让透视，揭开空间的另一面。</sub>
 
-脚本会先核对当前登录账户是否确实为 `ScottH1122`，不一致就拒绝发布；目标仓库已存在时也不会覆盖。公开仓库将命名为 `perspective-illusion-studio`。只有在你本人已经登录、允许该账号创建仓库时才会执行发布。
+</div>
