@@ -85,6 +85,26 @@ No replacement background. No sequence of AI-generated intermediate images. The 
 > [!NOTE]
 > This scene is an **artistic interpretation of Shibuya**, not a survey-accurate digital replica of the intersection. Advertisements and illustrated characters are fictional.
 
+## 🏛️ Latest film · AETERNA, the Eternal Forum
+
+A completely **imagined Greco-Roman imperial capital**, created from real procedural Three.js architecture: marble streets, colonnades, triumphal arches, a sacred mountain temple, bronze sea-god fountain, market life and a lavender-gold Mediterranean sunset.
+
+<div align="center">
+
+<a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/preview.gif" width="90%" alt="AETERNA Greco-Roman forum — original 3D flat-to-wide perspective-illusion film" /></a>
+
+<br/><br/>
+
+**[▶ Watch AETERNA · Finished MP4 with original classical soundtrack](scenes/aeterna-forum/aeterna_final.mp4)**
+
+[**Open the editable 3D project**](scenes/aeterna-forum/) &nbsp;·&nbsp; [**Read the scene notes**](scenes/aeterna-forum/README.md) &nbsp;·&nbsp; [**View the camera storyboard**](scenes/aeterna-forum/storyboard.jpg)
+
+<sub>10 seconds · 1280 × 720 · 15 native FPS · 2° long lens → 84° dolly zoom → 26° corner reveal</sub>
+
+</div>
+
+This original classical world demonstrates the Skill's actual multi-pass 3D renderer, not an animated still image. Fine-line shimmer and illustrative polygonal character details remain in this software-rendered sample. Original score composed algorithmically from lyre, flute, strings, temple chimes and fountain ambience.
+
 ## 🌃 New showcase · Night City 2077
 
 An original **Cyberpunk 2077-inspired** animated neon megacity, made with the same reproducible Three.js camera skill — not game footage and not official game art.
