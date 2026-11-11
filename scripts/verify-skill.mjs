@@ -45,4 +45,15 @@ for (const file of ['scripts/serve.mjs']) {
   assert.equal(check.status,0,`Server JS syntax invalid: ${check.stderr}`);
 }
 assert.match(read('start-mac.command'), /node scripts\/serve\.mjs/, 'Mac launcher must start local server');
+
+const nightCity = 'scenes/night-city-2077/';
+for (const f of [
+  'scene.html', 'render.mjs', 'night_city_2077.mp4', 'preview.gif',
+  'poster.jpg', 'storyboard.jpg', 'soundtrack.py',
+  'soundtrack_original.wav', 'LICENSE', 'SKILL.md', 'README.md'
+]) assert.ok(fs.existsSync(nightCity + f), 'Missing Night City example: ' + f);
+const cyberScene = read(nightCity + 'scene.html');
+assert.ok(cyberScene.includes('CYBERPUNK CITY EXPANSION'), 'Missing futuristic geometry');
+assert.ok(cyberScene.includes('fov:84') && cyberScene.includes('fov:79'), 'Missing strong dolly zoom');
+assert.ok(fs.statSync(nightCity + 'night_city_2077.mp4').size > 1_000_000, 'Night City MP4 missing');
 console.log(`Skill checks passed: metadata, hooks, camera, crisp rendering, ${textureCount} cutouts, MP4, license.`);
