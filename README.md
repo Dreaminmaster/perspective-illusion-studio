@@ -85,6 +85,26 @@ No replacement background. No sequence of AI-generated intermediate images. The 
 > [!NOTE]
 > This scene is an **artistic interpretation of Shibuya**, not a survey-accurate digital replica of the intersection. Advertisements and illustrated characters are fictional.
 
+## 🌃 New showcase · Night City 2077
+
+An original **Cyberpunk 2077-inspired** animated neon megacity, made with the same reproducible Three.js camera skill — not game footage and not official game art.
+
+<div align="center">
+
+<a href="scenes/night-city-2077/night_city_2077.mp4"><img src="scenes/night-city-2077/preview.gif" width="90%" alt="Night City 2077 — looping neon futuristic 3D perspective illusion" /></a>
+
+<br/><br/>
+
+**[▶ Watch the finished video with original synth soundtrack](scenes/night-city-2077/night_city_2077.mp4)**
+
+[**Open the complete editable 3D source**](scenes/night-city-2077/) &nbsp;·&nbsp; [**Read scene notes**](scenes/night-city-2077/README.md)
+
+<sub>10 s · 1280 × 720 · 15 native FPS · 2° → 84° dolly zoom · −27° second reveal</sub>
+
+</div>
+
+Featuring original holographic ads, futuristic building towers, suspended skybridges, moving hovercars, rain-soaked street reflections and procedurally composed electronic ambience. All rendered from editable **real 3D geometry**, with no optical-flow interpolation. Fine line shimmer may remain due to software GPU antialiasing.
+
 ## What we improved
 
 The [original Simcraft perspective-illusion technique](https://github.com/dotslashsimran/simcraft/tree/main/skills/video/perspective-illusion) provides the crucial camera model, Four-Pass illustration renderer, scene templates and loopable movement. This edition documents the additional changes developed through a hands-on Shibuya video iteration.
