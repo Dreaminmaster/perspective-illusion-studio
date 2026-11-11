@@ -36,7 +36,7 @@ jobs:
           unzip -q /tmp/skill.zip -d /tmp/skill-import
           test -f /tmp/skill-import/perspective-illusion-studio/SKILL.md
           test -f /tmp/skill-import/perspective-illusion-studio/examples/shibuya-demo.mp4
-          rsync -a --exclude README.md \
+          rsync -a --exclude README.md --exclude ".github/" \
             /tmp/skill-import/perspective-illusion-studio/ ./
       - name: Generate scene stills and animated preview
         run: |
