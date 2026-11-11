@@ -8,7 +8,8 @@
     "test": "node scripts/verify-skill.mjs",
     "preview": "node render.mjs scene.html preview.mp4 --preview --fps=12 --mink=1 --step=500",
     "render:crisp": "node render.mjs scene.html final_crisp.mp4 --preview --fps=24 --mink=4 --step=500",
-    "render:high": "node render_fast.mjs scene.html final_high.mp4 --fps=30 --mink=4 --step=2"
+    "render:high": "node render_fast.mjs scene.html final_high.mp4 --fps=30 --mink=4 --step=2",
+    "explore": "node scripts/serve.mjs"
   },
   "dependencies": {
     "playwright": "1.60.0",
