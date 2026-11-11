@@ -1,0 +1,50 @@
+name: Import AETERNA Greco-Roman Forum film
+on:
+  push:
+    paths:
+      - ".github/workflows/import-aeterna.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout skill repository
+        uses: actions/checkout@v4
+      - name: Download and verify AETERNA scene package
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-delay 3 \
+            "https://tmpfiles.org/wTABW9p8hIA1/aeterna_complete_skill_project.zip" \
+            --output /tmp/aeterna-page.html
+          python3 - <<'PY' > /tmp/aeterna-url.txt
+          import re
+          from html import unescape
+          from pathlib import Path
+          page = Path("/tmp/aeterna-page.html").read_text()
+          m = re.search(r'class="download" href="([^"]+)"', page)
+          if not m:
+              raise RuntimeError("Could not resolve signed AETERNA ZIP URL")
+          print(unescape(m.group(1)))
+          PY
+          curl --fail --location --retry 3 --retry-delay 3 \
+            "$(cat /tmp/aeterna-url.txt)" --output /tmp/aeterna.zip
+          echo "850384f5a402e876da746819ae8e4423cf569886d3ea6cc521177771510cc5e6  /tmp/aeterna.zip" | sha256sum --check
+          mkdir -p /tmp/aeterna-import
+          unzip -q /tmp/aeterna.zip -d /tmp/aeterna-import
+          test -s /tmp/aeterna-import/aeterna-forum/scene.html
+          test -s /tmp/aeterna-import/aeterna-forum/aeterna_final.mp4
+          test -s /tmp/aeterna-import/aeterna-forum/preview.gif
+          test -s /tmp/aeterna-import/aeterna-forum/LICENSE
+          mkdir -p scenes/aeterna-forum
+          rsync -a /tmp/aeterna-import/aeterna-forum/ scenes/aeterna-forum/
+      - name: Commit finished film, 3D source and original score
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scenes/aeterna-forum
+          if ! git diff --cached --quiet; then
+            git commit -m "feat: archive AETERNA Greco-Roman 3D film and original score [skip ci]"
+            git push
+          fi
