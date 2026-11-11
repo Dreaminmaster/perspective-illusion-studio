@@ -1180,7 +1180,7 @@ function setMode(next) {
 }
 function moveCamera(dt) {
   if(currentMode!=="explore") return;
-  const step = dt * (keys.has("Shift") ? 30 : 11);
+  const step = dt * (keys.has("ShiftLeft") || keys.has("ShiftRight") ? 30 : 11);
   forward.copy(controls.target).sub(cam.position);
   forward.y=0;
   if(forward.lengthSq()<.01) forward.set(0,0,-1);
