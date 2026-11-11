@@ -38,6 +38,7 @@ jobs:
           test -f /tmp/skill-import/perspective-illusion-studio/examples/shibuya-demo.mp4
           rsync -a --exclude README.md --exclude ".github/" \
             /tmp/skill-import/perspective-illusion-studio/ ./
+          sed -i 's@^stills/$@/stills/@' .gitignore
       - name: Generate scene stills and animated preview
         run: |
           set -euo pipefail
@@ -50,7 +51,7 @@ jobs:
           ffmpeg -nostdin -y -loglevel error -ss 3.6 -i examples/shibuya-demo.mp4 -frames:v 1 -q:v 2 assets/stills/02-reveal.jpg
           ffmpeg -nostdin -y -loglevel error -ss 7.7 -i examples/shibuya-demo.mp4 -frames:v 1 -q:v 2 assets/stills/03-corner.jpg
           ffmpeg -nostdin -y -loglevel error -i examples/shibuya-demo.mp4 \
-            -filter_complex "[0:v]fps=9,scale=760:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=3" \
+            -filter_complex "[0:v]fps=7,scale=640:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=bayer:bayer_scale=3" \
             -loop 0 assets/shibuya-loop.gif
           test -s assets/shibuya-loop.gif
           ffprobe -v error -show_entries stream=codec_name,width,height,avg_frame_rate \
