@@ -106,6 +106,38 @@ The focal plane stays approximately the same size within the composition while c
 
 Here `W` is the visible width at the focus plane. As the FOV widens and the camera approaches, hidden distance between near and far objects becomes legible. For the actual timeline, see [camera design](references/camera-design.md).
 
+## 🧭 Explore Shibuya in 3D on your Mac
+
+The video is only one way to see the scene. **You can now walk around the actual Three.js city yourself**, rotate the camera, inspect signs, and replay the cinematic lens illusion.
+
+<div align="center">
+
+[**⬇ Download the complete project ZIP**](https://github.com/Dreaminmaster/perspective-illusion-studio/archive/refs/heads/main.zip)
+
+</div>
+
+**Mac one-click start (recommended)**
+
+1. Download the full ZIP above and unzip it. Do not download `explore.html` alone.
+2. Open the folder and **double-click `start-mac.command`**. It checks Node.js and installs Three.js on first run. If macOS blocks it, right-click the script and choose *Open*.
+3. It opens `http://127.0.0.1:8765/explore.html?scale=.40` in your browser. Chrome is recommended.
+4. **Drag** to rotate · **right-drag** to pan · **scroll/pinch** to zoom · **W/A/S/D** to move · **Q/E** to descend/ascend · **Shift** to speed up · **F** to play the original dolly-zoom sequence · **R** to reset · **P** to pause.
+5. Close the launcher terminal (or press Ctrl+C) to stop the local-only server.
+
+> Requires Node.js 22+ ([install Node.js](https://nodejs.org/en/download)) and an internet connection for the first `npm ci`. The viewer itself is local. You do not need a remote cloud computer.
+
+**Terminal alternative**
+
+~~~bash
+git clone https://github.com/Dreaminmaster/perspective-illusion-studio.git
+cd perspective-illusion-studio
+npm ci
+npm run explore
+# Open http://127.0.0.1:8765/explore.html?scale=.40
+~~~
+
+The interactive viewer is [`explore.html`](explore.html). It uses the **same 3D model, animated pedestrians, rain and stylised four-pass materials as the video**. It is intended for exploration, not an exact architectural replica. For lower GPU use, try `?scale=.30` in the URL.
+
 ## ⚡ Quick start
 
 **Requirements:** Node.js 22+, FFmpeg, Chrome/Chromium and WebGL. Hardware graphics acceleration is recommended for high-quality rendering.
