@@ -1,0 +1,549 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>AETERNA — Greco-Roman Imperial Forum | Perspective Illusion</title>
+<style>
+  html, body { margin: 0; background: #D88879; }
+  #frame { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+  canvas#gl { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+</style>
+<div id="frame"><canvas id="gl" width="2880" height="1620"></canvas></div>
+<script type="importmap">{ "imports": { "three": "./node_modules/three/build/three.module.js", "three/addons/": "./node_modules/three/examples/jsm/" } }</script>
+<script type="module">
+import * as THREE from "three";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { OutlineEffect } from "three/addons/effects/OutlineEffect.js";
+import { LineSegments2 } from "three/addons/lines/LineSegments2.js";
+import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js";
+import { LineMaterial } from "three/addons/lines/LineMaterial.js";
+
+const SCALE = +(new URLSearchParams(location.search).get("scale") || 1), PW = Math.round(2880 * SCALE), PH = Math.round(1620 * SCALE), ASPECT = 16 / 9;   /* ?scale=.5 for fast previews */   // rendered at 1.5x and shown at 1920: steady, anti-aliased lines
+const R = new THREE.WebGLRenderer({ canvas: document.getElementById("gl"), antialias: true, preserveDrawingBuffer: true });
+R.setPixelRatio(1); R.setSize(PW, PH, false); R.outputColorSpace = THREE.SRGBColorSpace; R.toneMapping = THREE.NoToneMapping;
+R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFShadowMap;   // hard-edged cast shadows, like the reference
+const scene = new THREE.Scene();
+// burning sunset sky (screen-space backdrop)
+{ const c = document.createElement("canvas"); c.width = 16; c.height = 512; const g = c.getContext("2d"); const gr = g.createLinearGradient(0, 0, 0, 512);
+  gr.addColorStop(0, "#D9A0B4"); gr.addColorStop(1, "#F3C68B");   // a flat graphic sky g.fillStyle = gr; g.fillRect(0, 0, 16, 512);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; scene.background = t; }
+
+// ---------- kit ----------
+// cel shading: two flat tones per surface with a hard terminator (the reference's illustration look)
+const ramp = new THREE.DataTexture(new Uint8Array([112, 112, 128, 255, 255, 255, 255, 255]), 2, 1, THREE.RGBAFormat);   // shadow tone a touch blue, like the reference
+ramp.minFilter = ramp.magFilter = THREE.NearestFilter; ramp.needsUpdate = true;
+const cache = {};
+const mat = (color, o = {}) => { const { roughness, metalness, envMapIntensity, emissive, emissiveIntensity, ...rest } = o;
+  const k = color + JSON.stringify(Object.keys(rest).map((k) => [k, rest[k]?.uuid || rest[k]])) + (emissive || "");
+  return cache[k] ||= new THREE.MeshToonMaterial({ color, gradientMap: ramp, ...(emissive ? { emissive, emissiveIntensity } : {}), ...rest }); };
+const GLOSS = (c) => mat(c), METAL = (c = "#c9cbd3") => mat(c);
+const rnd = (() => { let s = 11; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+function tex(w, h, paint, rep = [1, 1]) { const c = document.createElement("canvas"); c.width = w; c.height = h; paint(c.getContext("2d"), w, h);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 16; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(...rep); return t; }
+let G = scene;
+const put = (m, x, y, z, rx = 0, ry = 0, rz = 0) => { m.position.set(x, y, z); m.rotation.set(rx, ry, rz); m.castShadow = m.receiveShadow = true; G.add(m); return m; };
+const rb = (w, h, d, r, m, x, y, z, ry = 0) => put(new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w / 2 - 1e-3, h / 2 - 1e-3, d / 2 - 1e-3)), m), x, y, z, 0, ry);
+const box = (w, h, d, m, x, y, z, ry = 0) => put(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m), x, y, z, 0, ry);
+const cyl = (rt, rbm, h, m, x, y, z, seg = 32) => put(new THREE.Mesh(new THREE.CylinderGeometry(rt, rbm, h, seg), m), x, y, z);
+const tube = (pts, r, m, seg = 64) => put(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))), seg, r, 8), m), 0, 0, 0);
+const lathe = (pts, m, x, y, z) => put(new THREE.Mesh(new THREE.LatheGeometry(pts.map(([a, b]) => new THREE.Vector2(a, b)), 48), m), x, y, z);
+const group = (fn, x, y, z, ry = 0) => { const g = new THREE.Group(), p = G; G = g; fn(); G = p; g.position.set(x, y, z); g.rotation.y = ry; g.traverse((o) => { if (o.isMesh) o.castShadow = o.receiveShadow = true; }); G.add(g); return g; };
+
+// Warm hand-picked original Greco-Roman material palette
+const C = { wall: "#83849A", wall2: "#7A7B92", wall3: "#727284", trim: "#B9BCC3", glass: "#1A2235", road: "#515963", walk: "#B9BCC3", cone: "#E33807", car: "#334AB3", pole: "#9A9BAE", green: "#125532", ink: "#050407" };
+
+
+// ROMAN IMPERIAL FORUM — fully original, metrically positioned procedural geometry
+const END=-240, TICK=[],GLOW=[],NOINK=[],WALKERS=[],CONES=[];
+const M={
+  marble:mat("#F7E6C8"),ivory:mat("#EEE2CF"),stone:mat("#D5B798"),rose:mat("#CD9988"),terra:mat("#B76E5E"),
+  gold:mat("#E6BC64"),bronze:mat("#597667"),wine:mat("#8F2B3D"),navy:mat("#2A4464"),olive:mat("#527A4A"),
+  leaf:mat("#315744"),dark:mat("#755D61"),sky:mat("#FBEBCE"),water:mat("#91CFD2",{transparent:true,opacity:.72,depthWrite:false}),
+  flame:mat("#FFD46A",{emissive:"#FA9E39",emissiveIntensity:1.7})
+};
+function plane(w,d,m,x,y,z){const o=put(new THREE.Mesh(new THREE.PlaneGeometry(w,d),m),x,y,z,-Math.PI/2);o.castShadow=false;return o;}
+function sph(r,m,x,y,z){return put(new THREE.Mesh(new THREE.SphereGeometry(r,12,8),m),x,y,z);}
+function tor(r,t,m,x,y,z,rx=Math.PI/2){return put(new THREE.Mesh(new THREE.TorusGeometry(r,t,8,40),m),x,y,z,rx);}
+function con(r,h,m,x,y,z){return put(new THREE.Mesh(new THREE.ConeGeometry(r,h,12),m),x,y,z);}
+function stoneTex(){
+ const c=document.createElement("canvas");c.width=c.height=1024;const g=c.getContext("2d");
+ g.fillStyle="#ECD6B7";g.fillRect(0,0,1024,1024);
+ for(let yy=0;yy<1024;yy+=128)for(let xx=0;xx<1024;xx+=128){
+   g.fillStyle=["#F7E7CB","#E9D1B0","#EED9C3","#DFBA9E"][Math.floor(rnd()*4)];
+   g.fillRect(xx+2,yy+2,124,124);
+   g.strokeStyle="#B99A7E";g.lineWidth=2;g.strokeRect(xx+2,yy+2,124,124);
+   for(let j=0;j<4;j++){g.strokeStyle="rgba(110,85,70,.12)";g.beginPath();g.moveTo(xx+rnd()*120,yy);g.bezierCurveTo(xx+24,yy+66,xx+95,yy+55,xx+rnd()*120,yy+128);g.stroke();}
+ }
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(5,19);return t;
+}
+plane(210,390,new THREE.MeshToonMaterial({map:stoneTex(),gradientMap:ramp}),0,-.02,-85);
+for(let i=0;i<6;i++){box(100,.3,1.6,i%2?M.ivory:M.marble,0,i*.25,27+i*1.55);box(100,.07,.1,M.gold,0,i*.25+.18,26.2+i*1.55);}
+for(const sx of [-1,1])box(.16,.07,210,M.gold,sx*20,.06,-62);
+const mosaic=(()=>{const c=document.createElement("canvas");c.width=c.height=512;const g=c.getContext("2d");
+ g.fillStyle="#E2C8A6";g.fillRect(0,0,512,512);g.translate(256,256);
+ for(let r=235;r>25;r-=17){g.strokeStyle=r%2?"#9E7858":"#EBCB84";g.lineWidth=r%2?12:8;g.beginPath();g.arc(0,0,r,0,7);g.stroke();}
+ g.fillStyle="#4D4A52";g.beginPath();g.arc(0,0,127,0,7);g.fill();
+ g.fillStyle="#E6BB68";g.font="bold 72px Georgia";g.textAlign="center";g.fillText("SPQR",0,18);
+ for(let i=0;i<36;i++){const a=i*Math.PI/18;g.save();g.rotate(a);g.fillRect(-4,-218,8,21);g.restore();}
+ const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;})();
+plane(17,17,new THREE.MeshToonMaterial({map:mosaic,gradientMap:ramp}),0,.07,8);
+function column(h=12,r=.85){
+ cyl(r*1.38,r*1.38,.33,M.stone,0,.17,0);
+ cyl(r*1.12,r*1.12,.28,M.gold,0,.42,0);
+ cyl(r*.92,r*1.08,h-1.4,M.marble,0,h*.50,0,24);
+ for(let a=0;a<12;a++){const t=a*Math.PI/6;cyl(.048,.055,h-1.7,M.stone,Math.sin(t)*r*.93,h*.49,Math.cos(t)*r*.93,6);}
+ cyl(r*1.12,r*1.12,.28,M.ivory,0,h-.48,0);
+ for(let k=0;k<8;k++){const a=k*Math.PI/4;con(.25,.85,M.olive,Math.sin(a)*r*.85,h-.70,Math.cos(a)*r*.85);}
+ box(r*2.9,.26,r*2.9,M.marble,0,h-.10,0);
+}
+function arch(w,h,opening,dep,m){
+ const s=new THREE.Shape();s.moveTo(-w/2,0);s.lineTo(w/2,0);s.lineTo(w/2,h);s.lineTo(-w/2,h);s.closePath();
+ const hh=new THREE.Path();const sp=opening*.82;hh.moveTo(-opening,0);hh.lineTo(-opening,sp);hh.absarc(0,sp,opening,Math.PI,0,true);hh.lineTo(opening,0);hh.closePath();s.holes.push(hh);
+ return new THREE.Mesh(new THREE.ExtrudeGeometry(s,{depth:dep,bevelEnabled:false,curveSegments:20}),m);
+}
+// Distinct repeating lateral architectural layers, 12 m apart in actual depth.
+for(const side of [-1,1])for(let i=0;i<13;i++){
+ const z=19-i*14.1;
+ group(()=>{
+   const a=arch(13,15,4.4,3.4,M.ivory);put(a,0,0,-1.7);
+   for(const xx of [-5.6,5.6])for(const zz of [-1.8,1.8])group(()=>column(14,.7),xx,0,zz);
+   box(14.5,.8,6,M.stone,0,15.1,0);
+   box(14.6,.15,6.2,M.gold,0,15.6,0);
+   for(const xx of [-4.8,0,4.8])group(()=>column(5.2,.43),xx,15.8,-1.1);
+   box(14.5,.65,6,M.marble,0,21.0,0);
+   box(14.9,.14,6.2,M.gold,0,21.4,0);
+   for(const xx of [-5.5,0,5.5])con(.5,1.0,M.stone,xx,22.2,0);
+ },side*35.5,0,z,side*Math.PI/2);
+}
+// Elevated stairs and the sacred hill terrace. All are independent 3D geometry.
+for(let k=0;k<14;k++){
+ box(118,.78,2.5,k%2?M.marble:M.ivory,0,1.0+k*.75,-125-k*2.5);
+ box(119,.12,.15,M.gold,0,1.45+k*.75,-125-k*2.5);
+}
+box(150,9.0,74,M.stone,0,17.4,-183);
+function tri(w,h,d,m,x,y,z){const sh=new THREE.Shape();sh.moveTo(-w/2,0);sh.lineTo(0,h);sh.lineTo(w/2,0);sh.closePath();return put(new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:d,bevelEnabled:false}),m),x,y,z);}
+group(()=>{
+ box(78,1.5,38,M.ivory,0,.8,0);
+ for(const z of [-14,14])for(let i=-6;i<=6;i++)group(()=>column(23,1.05),i*5.55,1.1,z);
+ box(82,2.3,42,M.marble,0,26.0,0);
+ box(83,.26,43,M.gold,0,27.1,0);
+ tri(82,11,3.3,M.stone,0,27.2,16);
+ tri(78,8.7,.3,M.rose,0,27.3,19.6);
+ tri(75,7.5,.3,M.ivory,0,27.4,19.9);
+ for(const x of [-27,-18,-9,0,9,18,27])sph(.54,M.gold,x,30,20.2);
+ for(const x of [-16,-8,0,8,16])box(3,13,.15,M.dark,x,14,-5.6);
+ for(const x of [-20,20])group(()=>column(10,.8),x,0,0);
+},0,22.5,-194);
+// Monumental triumphal arch with a genuine portal and sculptural bas-reliefs.
+const GATE=group(()=>{
+ put(arch(51,37,12,7,M.ivory),0,0,-3.5);
+ for(const sx of [-1,1]){
+  group(()=>column(32,1.3),sx*17,1.1,4);
+  group(()=>column(32,1.3),sx*23,1.1,4);
+  box(10,15,1.2,M.rose,sx*20,18.5,4.9);
+  box(10,1.0,1.4,M.gold,sx*20,11.2,5.2);
+ }
+ box(55,2.5,8,M.marble,0,38.5,0);
+ box(56,.25,8.6,M.gold,0,40.0,0);
+ for(let i=-8;i<=8;i++){
+   box(2.8,1.6,.3,i%2?M.rose:M.stone,i*3.1,39.0,4.3);
+   sph(.45,M.gold,i*3.1,39.0,4.6);
+ }
+ for(const sx of [-1,1]){
+   group(()=>{figure(4.4,M.ivory,true);con(1.2,2,M.gold,0,5.4,0);},sx*20,12.2,6);
+   group(()=>figure(3.1,M.marble,true),sx*19.8,42.0,0);
+ }
+},0,.5,-125);GATE.scale.setScalar(.80);
+// Architectural reliefs on the triumphal arch: marble and gold, real 3D projected onto its façades.
+const ornamentalGold=mat("#D9AD59");
+const ornamentalRelief=mat("#BB8E79");
+for(const xx of [-15.5,15.5])for(const y of [8,15,22])group(()=>{
+  box(4.8,6.1,.3,M.stone,0,0,0);
+  box(4.3,5.6,.36,M.marble,0,.0,.05);
+  for(let j=0;j<4;j++)box(3.7,.12,.04,ornamentalGold,0,-2.2+j*1.4,.26);
+  figure(3.9,M.ivory,true);
+},xx,y,-119.9);
+for(let k=-7;k<=7;k++)group(()=>{
+  box(2.15,1.38,.25,ornamentalRelief,0,0,0);
+  tor(.52,.085,ornamentalGold,0,0,.17,0);
+  sph(.16,M.ivory,0,0,.25);
+},k*2.5,33.0,-120);
+// Bronze chariot monument above the arch, and a laurel crown relief.
+group(()=>{
+ box(10,.8,2.6,M.bronze,0,0,0);
+ for(const x of [-2,2])tor(1.15,.17,M.gold,x,0,1.45,0);
+ group(()=>figure(4.0,M.bronze,true),0,.8,0);
+ for(const x of [-6,-4,4,6])group(()=>{
+  sph(.9,M.bronze,0,1.2,0);con(.4,1.5,M.bronze,0,2.1,-.7);
+  for(const xx of [-.5,.5])cyl(.1,.1,1.15,M.bronze,xx,.32,.55,6);
+ },x,-.15,0);
+},0,36.6,-124);
+// Circular victory temple at left; elliptical colosseum at right.
+group(()=>{
+ cyl(14,14,1.8,M.stone,0,.9,0,44);
+ for(let i=0;i<14;i++){let a=i*Math.PI*2/14;group(()=>column(15,.72),Math.sin(a)*12.2,1.8,Math.cos(a)*12.2);}
+ cyl(15,15,1.3,M.marble,0,17.2,0,48);
+ con(17,7,M.rose,0,21.6,0);con(2,3,M.gold,0,26,0);
+},-76,15,-183);
+group(()=>{
+ for(let level=0;level<3;level++){
+  let y=level*7.8;
+  for(let i=0;i<40;i++){
+   let a=i*2*Math.PI/40;
+   box(2.5,7.1,3,M.ivory,Math.sin(a)*27,y+3.65,Math.cos(a)*27,a);
+  }
+  tor(27.7,.52,M.marble,0,y+7.25,0);
+  tor(28,.17,M.gold,0,y+7.73,0);
+ }
+ cyl(29,29,1.2,M.stone,0,24.7,0,48);
+ for(let k=0;k<16;k++){let a=k*Math.PI/8;
+  box(.15,3.1,.15,M.gold,Math.sin(a)*29,26.2,Math.cos(a)*29);
+ }
+},87,15,-182);
+// Pedestal figurines are original low-polygon sculptural people.
+function figure(h,robe,hero=false){
+ const pts=[[.08,0],[h*.21,h*.22],[h*.24,h*.40],[h*.18,h*.66],[h*.12,h*.78],[h*.1,h*.85]];
+ lathe(pts,robe,0,0,0);sph(h*.095,M.ivory,0,h*.91,0);
+ for(const sx of [-1,1])cyl(.065*h,.065*h,h*.30,robe,sx*h*.17,h*.52,0,8);
+ if(hero)con(.16*h,.2*h,M.gold,0,h*1.04,0);
+}
+// Stone fountain and sculpted sea deity.
+const WATER=new THREE.MeshBasicMaterial({color:0xA5D8E3,transparent:true,opacity:.48,depthWrite:false,side:THREE.DoubleSide});
+group(()=>{
+ cyl(10.6,10.6,1.2,M.marble,0,.6,0);
+ cyl(10.1,10.1,.18,M.gold,0,1.3,0);
+ cyl(9.7,9.7,.07,M.ivory,0,1.42,0);
+ tor(10,.32,M.stone,0,1.54,0);
+ cyl(5.1,5.1,1.6,M.ivory,0,2.2,0);
+ tor(5,.21,M.gold,0,3.3,0);
+ cyl(4.7,4.7,.07,M.ivory,0,3.28,0);
+ cyl(2.3,2.3,1.3,M.stone,0,4.0,0);
+ figure(4.3,M.bronze,true);
+ cyl(.11,.14,6.1,M.gold,1.45,6.5,0,9);
+ for(const off of [-.38,0,.38])con(.18,1.6,M.gold,1.45+off,9.9,0);
+ for(let i=0;i<16;i++){
+   let a=i*Math.PI/8,x=Math.sin(a)*8.3,z=Math.cos(a)*8.3;
+   sph(.50,M.gold,x,1.65,z);
+   const o=tube([[x,1.9,z],[x*.89,4.5,z*.89],[x*.6,2.0,z*.6]],.085,WATER,18);o.userData.noMerge=true;NOINK.push(o);
+ }
+},0,.2,-59);
+// Large philosopher and armed goddess statues in the foreground.
+for(const sx of [-1,1])group(()=>{
+ box(10,4.0,8,M.ivory,0,2.0,0);
+ for(let k=-2;k<=2;k++){box(.85,2.4,.12,M.rose,k*1.8,1.55,4.1);sph(.28,M.gold,k*1.8,2.4,4.18);}
+ group(()=>{
+  figure(8.0,M.marble,true);
+  if(sx>0){cyl(.13,.15,10,M.gold,3,6.6,0,10);tor(2.5,.16,M.gold,-2.5,6.0,0,0);}
+  else box(1.5,.18,.7,M.gold,2,7.2,.3);
+ },0,4.0,0);
+},sx*40,0,21);
+// Banner-bearing cypress groves, urns, roadside small temples.
+function cypress(x,z,h=12){group(()=>{
+ cyl(.20,.3,h*.64,M.stone,0,h*.33,0,8);
+ for(let j=0;j<5;j++)con(h*(.145-j*.012),h*.27,M.leaf,0,h*(.25+j*.155),0);
+},x,0,z);}
+for(const sx of [-1,1])for(let k=0;k<20;k++){
+ let z=25-k*10.7;cypress(sx*(54+(k%3)*2),z,11+k%4);
+ if(k%2===0)cypress(sx*(69+(k%3)*2),z-6,9+k%3);
+}
+const bannerTex=(()=>{const c=document.createElement("canvas");c.width=256;c.height=512;const g=c.getContext("2d");
+ g.fillStyle="#922D43";g.fillRect(0,0,256,512);g.strokeStyle="#EDCD76";g.lineWidth=13;g.strokeRect(22,25,212,460);
+ for(let k=0;k<24;k++){let a=k*Math.PI/12;g.fillStyle="#F3D18B";g.beginPath();g.ellipse(128+63*Math.cos(a),220+90*Math.sin(a),15,6,a,0,7);g.fill();}
+ g.fillStyle="#EBD28E";g.textAlign="center";g.font="bold 46px Georgia";g.fillText("AETERNA",128,382);
+ let t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;})();
+for(const sx of [-1,1])for(let i=0;i<12;i++){
+ let z=19-i*16;const b=new THREE.Mesh(new THREE.PlaneGeometry(2.65,5.45),new THREE.MeshBasicMaterial({map:bannerTex,side:THREE.DoubleSide}));
+ b.position.set(sx*25.5,12.2,z);scene.add(b);GLOW.push(b);
+ box(3,.12,.14,M.gold,sx*25.5,15,z);
+}
+// Market awnings and vessels are physically separated, deep and readable after dolly move.
+const awning=(()=>{const c=document.createElement("canvas");c.width=256;c.height=256;const g=c.getContext("2d");
+ for(let x=0;x<256;x+=32){g.fillStyle=(x/32)%2?"#A33347":"#F0D1A1";g.fillRect(x,0,32,256);}const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return new THREE.MeshToonMaterial({map:t,gradientMap:ramp});})();
+for(const sx of [-1,1])for(let i=0;i<8;i++)group(()=>{
+ for(const xx of [-3,3])for(const zz of [-2.6,2.6])cyl(.12,.12,4,M.stone,xx,2,zz,7);
+ box(6.5,.13,5.6,awning,0,4,0);
+ box(6.4,1.2,2.1,M.stone,0,.7,1.9);
+ box(6.4,.15,2.2,M.marble,0,1.25,1.9);
+ for(let q=0;q<20;q++)sph(.16+(q%4)*.05,q%4===0?M.olive:M.wine,-2.8+(q%10)*.57,1.55,1.3+Math.floor(q/10)*.7);
+ for(const a of [-2.6,2.6])lathe([[0,0],[.4,.25],[.62,.8],[.5,1.5],[.30,1.7]],M.terra,a,.0,3.4);
+},sx*27,0,11-i*18,sx>0?Math.PI:0);
+// Visitors occupy several independent z planes.
+const robes=[M.wine,M.navy,M.ivory,M.rose,M.marble,M.stone];
+for(let i=0;i<115;i++){
+ let x=(rnd()-.5)*37,z=18-rnd()*132;
+ if(z<-48&&z>-72&&Math.abs(x)<13)x+=(x>0?13:-13);
+ if(z<-92&&z>-115&&Math.abs(x)<14)x+=(x>0?15:-15);
+ const color=robes[Math.floor(rnd()*robes.length)];
+ const g=group(()=>figure(1.5+rnd()*.4,color),x,0,z,rnd()*6.28);
+ g.userData.noMerge=true;WALKERS.push({g,x,z,k:rnd()*6.28});
+}
+// Golden ritual braziers with animated flames.
+const FLAME=[];
+for(const sx of [-1,1])for(let i=0;i<7;i++)group(()=>{
+ cyl(.16,.25,2.5,M.gold,0,1.25,0,10);
+ lathe([[.34,0],[.8,.14],[1.22,.45],[1.45,.86],[1.30,1.02]],M.bronze,0,2.2,0);
+ tor(1.34,.13,M.gold,0,3.2,0);
+ for(let k=0;k<5;k++){let a=k*2*Math.PI/5;let q=con(.22,1.2,M.flame,Math.sin(a)*.55,3.7,Math.cos(a)*.55);q.userData.noMerge=true;FLAME.push(q);}
+},sx*29,0,21-i*27);
+// 4-pass lighting; original Simcraft shaders preserved.
+const amb=new THREE.AmbientLight("#E9C3A1",1.12);scene.add(amb);
+const sun=new THREE.DirectionalLight("#FFE9C4",1.28);
+sun.position.set(-85,120,50);sun.target.position.set(0,18,-98);scene.add(sun,sun.target);
+sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-160,right:160,top:140,bottom:-140,near:1,far:475});
+sun.shadow.bias=-.0008;sun.shadow.normalBias=.06;
+TICK.push(ms=>{
+ const t=ms/10000*Math.PI*2;
+ for(const f of FLAME)f.scale.y=1+.12*Math.sin(t*5+f.position.x);
+ for(const p of WALKERS)p.g.position.z=p.z+.17*Math.sin(t+p.k);
+});
+
+// ---------- cameras: keyframes, blended as dolly zooms ----------
+// a shot = what it looks at (target), from which direction (yaw/pitch, deg), through what lens (fov), framing how wide (W, metres at the target)
+// The reference never tilts or turns its camera: it always faces straight down the street, level, so verticals stay
+// vertical. "Looking down" or "up" is done with lens shift (moving the horizon in the frame), like a tilt-shift lens.
+// Each shot below was solved from the reference frames' vanishing points, kerb lines and object sizes.
+// x: sideways position, y: camera height (m), zf: focus plane, W: width framed at the focus plane, fov: horizontal,
+// H: where the horizon sits (-1 bottom of frame, 0 centre, 1 top), lay: cone layout (0 kerb row, 1 diagonal)
+const SHOTS = {
+  flat:  { x: 0, y: 13, zf: -40, W: 44, fov: 2, H: 0, lay: 0, cs: 1 },             // telephoto: the whole avenue squashed into one flat elevation
+  worm:  { x: .3, y: .7, zf: 13, W: 30, fov: 90, H: -.72, lay: 0, cs: 1 },          // knee height behind the cones, horizon pushed low
+  diag:  { x: .3, y: 7, zf: 10, W: 22, fov: 80, H: .66, lay: 1, cs: 1 },            // high: the cones run in a diagonal into the scramble
+  diag2: { x: .1, y: 3.8, zf: 10, W: 17, fov: 80, H: .5, lay: 1, cs: 1 },
+  low:   { x: .2, y: 3.6, zf: 10, W: 21, fov: 75, H: .14, lay: 1, cs: 1 },
+  // corner views: swing round (yaw) and look down (el). Each starts on a long lens so the new angle first reads flat, then opens into 3D
+  face1: { x: -5.5, y: 1.6, zf: 9.25, W: 3.2, fov: 26, H: -.02, el: 0, yaw: -90, lay: 1, cs: 1 },   // eye-level close-up on the faces
+  face2: { x: -5.5, y: 1.6, zf: 9.25, W: 1.6, fov: 22, H: -.02, el: 0, yaw: -90, lay: 1, cs: 1 },
+  obl1T: { x: 5, y: 2, zf: 7, W: 26, fov: 4, H: -.12, el: 10, yaw: -22, lay: 0, cs: 1 },
+  obl1W: { x: 5, y: 2, zf: 7, W: 21, fov: 30, H: -.12, el: 10, yaw: -22, lay: 0, cs: 1 },
+  obl2T: { x: -2, y: 1, zf: 0, W: 36, fov: 4, H: -.25, el: 28, yaw: 36, lay: 1, cs: 1 },
+  obl2W: { x: -2, y: 1, zf: 0, W: 28, fov: 46, H: -.25, el: 28, yaw: 36, lay: 1, cs: 1 },
+};
+const drift = (s, o) => ({ ...s, ...Object.fromEntries(Object.entries(o).map(([k, v]) => [k, k === "W" ? s.W * v : s[k] + v])) });
+Object.assign(SHOTS, { flat2: drift(SHOTS.flat, { W: .965 }), flatD: drift(SHOTS.flat, { W: .985, lay: 1 }), flat2D: drift(SHOTS.flat, { W: .965, lay: 1 }),
+  worm2: drift(SHOTS.worm, { x: .25, W: .95 }), obl1T2: drift(SHOTS.obl1T, { W: .96, yaw: 2 }), obl2T2: drift(SHOTS.obl2T, { W: .96, yaw: -2 }), diag1b: drift(SHOTS.diag, { x: .1, W: .94 }),
+  diag2b: drift(SHOTS.diag2, { x: .1, W: .93 }), low2: drift(SHOTS.low, { x: -.2, W: .95 }) });
+// timeline matched to the reference. The cone swap (lay 0 <-> 1) happens inside flat holds, where it can't be seen.
+// flat -> worm's eye -> corner view (flat, then opens to 3D) -> flat (cones swap) -> high diagonal -> other corner (flat, then 3D) -> low -> flat
+// V2: show a true long-lens -> wide-lens dolly zoom at the SAME target/framing.
+const BASEFLAT = { x:0, y:19.5, zf:-95, W:109, fov:2.0, H:.03, lay:0, cs:1, yaw:0, el:0 };
+const BASEWIDE = {...BASEFLAT, fov:74, W:100, y:13.0, H:-.17};
+const CLOSE = {...BASEWIDE, fov:84, W:87, x:.3, y:11.0, H:-.16};
+const SIDEFLAT = {...BASEFLAT, x:0, y:18.0, fov:3, W:118, yaw:26, H:.06, lay:1 };
+const SIDEWIDE = {...SIDEFLAT, fov:62, W:108, yaw:26, y:13.5, H:-.11};
+Object.assign(SHOTS, {
+  v2flat:BASEFLAT, v2flatB:{...BASEFLAT, W:97}, v2flatD:{...BASEFLAT,lay:1},
+  v2wide:BASEWIDE, v2close:CLOSE,
+  v2sideFlat:SIDEFLAT, v2sideWide:SIDEWIDE,
+  v2sideCloser:{...SIDEWIDE,W:88},
+});
+const KEYS = [
+[0,"v2flat"],[700,"v2flatB"],[1120,"v2flat"],[3100,"v2wide"],
+[3700,"v2close"],[4350,"v2wide"],
+[5180,"v2flat"],[5380,"v2flatD"],[5830,"v2sideFlat"],
+[7000,"v2sideWide"],[7700,"v2sideCloser"],
+[8330,"v2sideWide"],[9320,"v2flatD"],
+[9680,"v2flatB"],[10000,"v2flat"]
+];
+const LOOP = 10000;
+const NAMES = KEYS.map((k) => k[1]), TIMES = KEYS.map((k) => k[0]);
+const PARAMS = (sh) => [sh.x, sh.y, sh.zf, Math.log(sh.W), Math.log(sh.fov), sh.H, sh.lay, sh.cs, sh.yaw || 0, sh.el || 0];
+const VALS = NAMES.map((n) => PARAMS(SHOTS[n]));
+// Fritsch-Carlson slopes per parameter: velocity is continuous through every key, and holds (equal keys) stay flat
+const SLOPES = VALS[0].map((_, j) => { const n = TIMES.length, d = [], m = new Array(n).fill(0);
+  for (let i = 0; i < n - 1; i++) d.push((VALS[i + 1][j] - VALS[i][j]) / (TIMES[i + 1] - TIMES[i]));
+  m[0] = d[0]; m[n - 1] = d[n - 2];
+  for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+  for (let i = 0; i < n - 1; i++) { if (d[i] === 0) { m[i] = m[i + 1] = 0; continue; } const a_ = m[i] / d[i], b_ = m[i + 1] / d[i], h = a_ * a_ + b_ * b_; if (h > 9) { const t_ = 3 / Math.sqrt(h); m[i] = t_ * a_ * d[i]; m[i + 1] = t_ * b_ * d[i]; } }
+  m[0] = m[n - 1] = 0; return m; });   // ends flat so the loop joins seamlessly
+const cam = new THREE.PerspectiveCamera(30, ASPECT, .1, 4000);
+function shotAt(ms) {
+  let k = 0; while (k < TIMES.length - 2 && ms >= TIMES[k + 1]) k++;
+  const h = TIMES[k + 1] - TIMES[k], u = Math.min(1, Math.max(0, (ms - TIMES[k]) / h));
+  const h00 = 2 * u ** 3 - 3 * u ** 2 + 1, h10 = u ** 3 - 2 * u ** 2 + u, h01 = -2 * u ** 3 + 3 * u ** 2, h11 = u ** 3 - u ** 2;
+  const v = VALS[k].map((a_, j) => h00 * a_ + h10 * h * SLOPES[j][k] + h01 * VALS[k + 1][j] + h11 * h * SLOPES[j][k + 1]);
+  return { x: v[0], y: v[1], zf: v[2], W: Math.exp(v[3]), fov: Math.exp(v[4]), H: v[5], lay: Math.min(1, Math.max(0, v[6])), cs: v[7], yaw: v[8], el: v[9] };
+}
+const JIT = [0, 0]; window.setJitter = (jx, jy) => { JIT[0] = jx * 2 / PW; JIT[1] = jy * 2 / PH; };
+function place(s) {
+  const hf = THREE.MathUtils.degToRad(s.fov), D = (s.W / 2) / Math.tan(hf / 2);             // dolly zoom: W stays framed at zf
+  // yaw: the camera swings round the focus point (x, zf) to look at the crossing from a corner; still level, so verticals stay vertical
+  const yw = THREE.MathUtils.degToRad(s.yaw), camX = s.x + Math.sin(yw) * D, camZ = s.zf + Math.cos(yw) * D;
+  cam.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(hf / 2) / ASPECT));
+  cam.position.set(camX, s.y, camZ); cam.lookAt(camX - Math.sin(yw), s.y, camZ - Math.cos(yw));                          // always level, always down the street
+  // el: look down on the focus point from this many degrees up, by raising the camera and shifting the lens (no tilt),
+  // so the target stays centred through a dolly zoom. el 0 = the hand-solved y and H as given.
+  const vt = Math.tan(hf / 2) / ASPECT, te = Math.tan(THREE.MathUtils.degToRad(s.el)), camY = s.y + D * te, Hs = s.H + te / vt;
+  cam.position.y = camY; cam.lookAt(camX - Math.sin(yw), camY, camZ - Math.cos(yw));
+  cam.near = Math.max(.5, Math.min(8, D / 450)); cam.far = Math.hypot(camX, camZ - END, camY) + 60; cam.updateProjectionMatrix();
+  cam.projectionMatrix.elements[9] = -Hs + JIT[1]; cam.projectionMatrix.elements[8] += JIT[0];   /* JIT: sub-pixel offset for anti-aliasing */                                                   // lens shift: puts the horizon at H
+  cam.projectionMatrixInverse.copy(cam.projectionMatrix).invert();
+  CONES.forEach((c, k) => { c.position.z = coneZ(k, s.lay); c.scale.setScalar(s.cs); });   // drawn bigger in the flat view, like the reference
+}
+
+
+// ---------- illustration pass ----------
+// Colour, surface direction + depth, and a shadow mask are rendered separately; a final pass draws the ink lines
+// wherever depth or surface direction changes (so lines also appear where things meet, e.g. a cone on the road),
+// with noise-varied weight and a slight wobble, and hatches the cast shadows with light strokes, like the reference.
+const colorRT = new THREE.WebGLRenderTarget(PW, PH, { samples: 4, type: THREE.HalfFloatType });
+const nrmRT = new THREE.WebGLRenderTarget(PW, PH, { type: THREE.HalfFloatType }); nrmRT.depthTexture = new THREE.DepthTexture(PW, PH, THREE.FloatType);
+const shdRT = new THREE.WebGLRenderTarget(PW, PH);
+const albRT = new THREE.WebGLRenderTarget(PW, PH);   // flat colours only (no sun): where one colour meets another, ink a line, like the reference
+const normalMat = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
+const shadowMat = new THREE.MeshLambertMaterial({ color: "#ffffff" });
+const post = new THREE.ShaderMaterial({ uniforms: { tC: { value: colorRT.texture }, tN: { value: nrmRT.texture }, tD: { value: nrmRT.depthTexture }, tS: { value: shdRT.texture }, tA: { value: albRT.texture }, invVP: { value: new THREE.Matrix4() }, sunDir: { value: new THREE.Vector3() }, camPos: { value: new THREE.Vector3() }, VP: { value: new THREE.Matrix4() }, tl: { value: 0 }, camRot: { value: new THREE.Matrix3() },
+    res: { value: new THREE.Vector2(PW, PH) }, sky: { value: new THREE.Color("#F4C398") }, dbg: { value: 0 }, near: { value: .1 }, far: { value: 100 }, ink: { value: new THREE.Color("#5E3F43") } },
+  vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }",
+  fragmentShader: `
+    uniform sampler2D tC, tN, tD, tS, tA; uniform mat4 invVP; uniform mat3 camRot; uniform vec3 sunDir; uniform vec3 camPos; uniform mat4 VP; uniform float tl; uniform vec2 res; uniform float near, far; uniform vec3 ink, sky; uniform float dbg; varying vec2 vUv;
+    float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+    float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
+      return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
+    float lin(float d){ return near * far / (far - d * (far - near)); }
+    vec3 toSRGB(vec3 c){ return mix(c * 12.92, 1.055 * pow(c, vec3(1./2.4)) - .055, step(.0031308, c)); }
+    // Lines where depth or surface direction changes. Depth uses the second difference (z+ + z- - 2z): a flat surface,
+    // even one seen almost edge-on like the road from knee height, has none, so it isn't inked by mistake.
+    float ecol;   // colour-boundary part of the last edgeAt, kept apart so ground markings can be drawn lighter
+    float edgeAt(vec2 uv, float r, float cdens){
+      vec2 px = r / res; vec3 ac = texture2D(tA, uv).rgb; float dc = texture2D(tD, uv).r; bool skyC = dc > .99999; float zc = lin(dc); vec3 nc = texture2D(tN, uv).xyz * 2. - 1.;
+      float e = 0.; ecol = 0.;
+      for (int k = 0; k < 4; k++) { float a = float(k) * .785398; vec2 o = vec2(cos(a), sin(a)) * px;
+        float d1 = texture2D(tD, uv + o).r, d2 = texture2D(tD, uv - o).r;
+        bool s1 = d1 > .99999, s2 = d2 > .99999;
+        if (skyC != s1 || skyC != s2) { e = 1.; continue; }
+        if (skyC) continue;
+        float z1 = lin(d1), z2 = lin(d2);
+        float kz = 1. + zc / 12.;                                       // far away, depth precision drops: demand a bigger jump
+        e = max(e, smoothstep(.006 * kz, .02 * kz, abs(z1 + z2 - 2. * zc) / zc));
+        vec3 n1 = texture2D(tN, uv + o).xyz * 2. - 1., n2 = texture2D(tN, uv - o).xyz * 2. - 1.;
+        e = max(e, smoothstep(.25, .5, 1. - min(dot(nc, n1), dot(nc, n2))));
+        vec3 a1 = texture2D(tA, uv + o).rgb, a2 = texture2D(tA, uv - o).rgb;   // colour boundaries (window bars, frames, trim, stripes)
+        float dcol = max(length(a1 - ac), length(a2 - ac));
+        ecol = max(ecol, smoothstep(.07, .11, dcol) * cdens); }
+      return e; }
+    // Dusk sky looked up by view DIRECTION (not screen position), so clouds stay put in the world while the camera moves:
+    // deep blue overhead to a warm peach horizon, flat anime clouds with pink undersides and a lit rim.
+    float fbm(vec2 p){ float a = .5, v = 0.; for (int i = 0; i < 5; i++) { v += a * noise(p); p = p * 2.03 + 17.1; a *= .5; } return v; }
+    vec3 skyAt(vec3 dir){ float e = dir.y;   // night over a lit city: deep blue overhead, a warm pink-orange glow at the horizon, clouds lit from below
+      vec3 hor = vec3(.78, .40, .41), low = vec3(.79, .46, .59), mid = vec3(.51, .47, .73), zen = vec3(.31, .37, .62);
+      vec3 c = mix(hor, low, smoothstep(-.01, .06, e)); c = mix(c, mid, smoothstep(.06, .22, e)); c = mix(c, zen, smoothstep(.22, .7, e));
+      vec2 q = dir.xz / (max(e, 0.) + .1);
+      float n = fbm(q * 1.1 + vec2(3.1, 7.7)), band = smoothstep(.02, .1, e) * (1. - smoothstep(.5, .8, e));
+      float cl = smoothstep(.47, .55, n) * band;
+      vec3 ccol = mix(vec3(.94, .59, .52), vec3(.87, .69, .75), smoothstep(.5, .68, n) * smoothstep(.0, .3, e));   // undersides glow with the city's light
+      c = mix(c, ccol, cl * .85);
+      float st = step(.997, hash(floor(dir.xz / (e + .2) * 140.))) * smoothstep(.25, .5, e) * (1. - cl); c += st * 0.;   // a few stars through the light pollution
+      return c; }
+    void main(){
+      vec2 p = vUv * res;
+      // wobble: displace the lookup a little along slow noise, so lines are not ruler-straight
+      vec2 wob = vec2(0.);   // no screen-space wobble: noise fixed to the screen made lines crawl when the camera moved
+      float zl = lin(texture2D(tD, vUv).r);
+      float w = mix(1.9, 1.35, smoothstep(6., 40., zl)) * (res.x / 2880.);            // half-width in px at 2880: ~2.4 px shown close up, ~1.8 far                                               // steady weight (2.1 px at 2880 = 1.4 px shown)
+      vec4 wp0 = invVP * vec4(vUv * 2. - 1., texture2D(tD, vUv).r * 2. - 1., 1.); wp0 /= wp0.w;
+      float foot = length(fwidth(wp0.xyz));                          // metres per pixel here
+      float cdens = 1. - smoothstep(.022, .05, foot);                 // colour lines (tiles, seams) fade before they crowd together and shimmer
+      float e = edgeAt(vUv + wob, w, cdens);
+      vec3 c = texture2D(tC, vUv).rgb;
+      float d = texture2D(tD, vUv).r; bool isSky = d > .99999;
+      if (isSky) { vec4 fp = invVP * vec4(vUv * 2. - 1., 1., 1.); fp /= fp.w; c = skyAt(normalize(fp.xyz - camPos)); }
+      float lit = texture2D(tS, vUv).r;
+      if (!isSky) {
+        vec3 nC = texture2D(tN, vUv).xyz * 2. - 1.;
+        float graze = smoothstep(.18, .4, abs(nC.z));                    // no hatching on surfaces seen nearly edge-on (ground from knee height)
+        vec3 nw = normalize(camRot * nC), an = abs(nw);
+        float thr = an.y > .7 ? .35 : .62;                             // upright and rounded things (cones, poles) turn to shade sooner, like the drawn reference
+        float sh = (1. - smoothstep(thr - .05, thr + .05, lit)) * graze;           // 1 only where no direct sun reaches (cast shadow / turned away)
+        c *= mix(vec3(1.), vec3(.78, .67, .74), sh);                  // two-tone: the shadow side is a clear cool step darker, like the reference
+        // hatching anchored to the world (not the screen), so it moves with surfaces and can't crawl or blink.
+        vec4 wp = invVP * vec4(vUv * 2. - 1., d * 2. - 1., 1.); wp /= wp.w;
+        vec2 q = an.y > .7 ? wp.xz : (an.x > an.z ? wp.zy : wp.xy);    // the plane the surface lies in
+        float hv = (q.x + q.y) * 11.;                                  // diagonal strokes ~6.5 cm apart
+        float fw = fwidth(hv);                                         // stripes per pixel: fade out before they get too fine to draw cleanly
+        float st = 1. - smoothstep(.0, fw * 1.5 + .08, abs(fract(hv) - .5) - .32);
+        float castOnly = smoothstep(.12, .22, dot(nw, sunDir));          // faces the sun but is in shade = a cast shadow; turned-away sides stay plain two-tone
+        float hatchOn = sh * castOnly * (1. - smoothstep(.12, .22, fw));
+        c = mix(c, c * vec3(.78, .65, .70), st * hatchOn * .7);
+        // hatching: fine diagonal strokes, broken up by noise, only inside shadow
+        float hx = (p.x - p.y) * .18 + noise(p * .03) * 3.;
+        float stroke = smoothstep(.86, .97, abs(sin(hx * 3.14159))) * step(.45, noise(p * vec2(.012, .05) + 3.));
+        // (screen-space hatching removed: it slid over moving surfaces and read as blinking)
+      }
+      vec3 nUp = normalize(camRot * (texture2D(tN, vUv).xyz * 2. - 1.));
+      // wet ground: screen-space reflection along the mirrored view ray, so every screen and sign shows in the road.
+      // Puddles are world-anchored noise (they stay put as the camera moves); fresnel makes grazing views more mirror-like.
+      if (!isSky && nUp.y > .9 && wp0.y < .3) {
+        vec3 P = wp0.xyz, V = normalize(P - camPos), Rd = reflect(V, vec3(0., 1., 0.));
+        float pud = smoothstep(.42, .6, fbm(P.xz * .3 + 7.));
+        float wet = (P.y < .08 ? .25 : .12) + pud * .23, fres = .2 + .8 * pow(1. - max(dot(-V, vec3(0., 1., 0.)), 0.), 3.);
+        vec3 refl = skyAt(Rd) * .6; float stp = .25 + length(P - camPos) * .015; vec3 Q = P + Rd * .05;
+        for (int i = 0; i < 48; i++) { Q += Rd * stp; stp *= 1.07; vec4 sp = VP * vec4(Q, 1.); sp /= sp.w; vec2 su = sp.xy * .5 + .5;
+          if (su.x < 0. || su.x > 1. || su.y < 0. || su.y > 1. || sp.z > 1.) break;
+          float sz = lin(texture2D(tD, su).r), qz = lin(sp.z * .5 + .5);
+          if (qz > sz && qz - sz < stp * 3.) { vec2 rip = vec2(noise(P.xz * 9.) - .5, 0.) * .004 * pud, px1 = 1.5 / res;
+            vec3 hitc = (texture2D(tC, su + rip + vec2(px1.x, 0.)).rgb + texture2D(tC, su + rip - vec2(px1.x, 0.)).rgb + texture2D(tC, su + rip + vec2(0., px1.y)).rgb + texture2D(tC, su + rip - vec2(0., px1.y)).rgb) * .25;
+            float edge = smoothstep(0., .08, su.x) * smoothstep(1., .92, su.x) * smoothstep(1., .9, su.y) * (1. - float(i) / 56.);
+            refl = mix(refl, hitc, edge); break; } }
+        c = mix(c * (1. - .3 * wet), refl, clamp(wet * fres, 0., .6));
+        vec2 cl2 = floor(P.xz * 1.6), fc = fract(P.xz * 1.6) - .5; float hh = hash(cl2), rph = fract(tl * 6. + hh);
+        vec2 oc = (vec2(hash(cl2 + 3.1), hash(cl2 + 7.7)) - .5) * .4; float rr = length(fc - oc);
+        float ring = (1. - smoothstep(0., .04, abs(rr - rph * .45))) * (1. - rph) * step(.3, hh) * (1. - smoothstep(.006, .02, foot));
+        c += ring * wet * .35 * vec3(.75, .8, 1.);
+      }
+      if (!isSky) c = mix(c, vec3(.16, .12, .24), smoothstep(100., 340., length(wp0.xz)) * .12);   // night haze, anchored to the world: only the far avenue fades, the same in every shot however far back the camera is
+      float colW = isSky ? 0. : (nUp.y > .7 ? .38 : 1.);            // tile joints and paint edges on the ground: thin grey, like the reference; on objects: full ink
+      e = max(smoothstep(.35, .65, e), smoothstep(.35, .65, ecol) * colW);                                   // crisp: a line is either there or not
+      c = mix(c, ink, e * (isSky ? 1. : .9));
+      // glow: bright pixels (screens, neon, lamps, lit windows) bloom softly into their surroundings
+      vec3 gsum = vec3(0.); for (int k = 0; k < 16; k++) { float a = float(k) * 2.39996, r = (5. + float(k) * 2.2) * (res.x / 2880.); vec3 sc = texture2D(tC, vUv + vec2(cos(a), sin(a)) * r / res).rgb; gsum += max(sc - .8, 0.) * (1. - float(k) / 20.); }
+      c += gsum * .10;
+      if (dbg > .5) c = texture2D(tC, vUv).rgb; if (dbg > 1.5) c = vec3(texture2D(tS, vUv).r); if (dbg > 2.5) c = texture2D(tA, vUv).rgb; if (dbg > 3.5) c = vec3(1. - e);
+      c *= mix(1., .86, smoothstep(.55, 1.08, length((vUv - .5) * vec2(1.6, 1.))));   // vignette
+      // night grade: a little more saturation and a gentle S-curve so neon and screens pop
+      float lum = dot(c, vec3(.2126, .7152, .0722)); c = max(mix(vec3(lum), c, 1.07), 0.); c = c * c * (3. - 2. * c) * .35 + c * .65;
+      gl_FragColor = vec4(toSRGB(clamp(c, 0., 1.)), 1.);
+    }` });
+const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), post); quad.frustumCulled = false;
+const postScene = new THREE.Scene(); postScene.add(quad); const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+function draw(target = null) {
+  const bg = scene.background;
+  R.setRenderTarget(colorRT); R.render(scene, cam);
+  NOINK.forEach((o) => { o.visible = false; }); scene.background = null; scene.overrideMaterial = normalMat; R.setRenderTarget(nrmRT); R.setClearColor(0x000000, 0); R.clear(); R.render(scene, cam);
+  GLOW.forEach((o) => { o.visible = false; }); scene.overrideMaterial = null; sun.visible = false; R.setRenderTarget(albRT); R.setClearColor(0x000000, 1); R.clear(); R.render(scene, cam); sun.visible = true;
+  const si = sun.intensity; sun.intensity = 2 * Math.PI;   // mask pass (three divides Lambert by pi): lit = 2 x (sun . normal), so surfaces turned more than ~80 deg from the sun read as shade (crisp two-tone on cones and poles)
+  scene.overrideMaterial = shadowMat; amb.visible = false; R.setRenderTarget(shdRT); R.setClearColor(0x000000, 1); R.clear(); R.render(scene, cam);
+  sun.intensity = si; amb.visible = true; scene.overrideMaterial = null; scene.background = bg; GLOW.forEach((o) => { o.visible = true; }); NOINK.forEach((o) => { o.visible = true; });
+  post.uniforms.near.value = cam.near; post.uniforms.far.value = cam.far;
+  post.uniforms.camPos.value.copy(cam.position); post.uniforms.VP.value.copy(cam.projectionMatrix).multiply(cam.matrixWorldInverse); post.uniforms.sunDir.value.copy(sun.position).sub(sun.target.position).normalize(); post.uniforms.invVP.value.copy(cam.matrixWorld).multiply(cam.projectionMatrixInverse); post.uniforms.camRot.value.setFromMatrix4(cam.matrixWorld);
+  R.setRenderTarget(target); R.render(postScene, postCam);
+}
+window.__info = () => { let meshes = 0; scene.traverse((o) => { if (o.isMesh) meshes++; }); return { meshes, calls: R.info.render.calls, tris: R.info.render.triangles }; };
+window.dbg = (v) => { post.uniforms.dbg.value = v; };
+// probe: where a grid of street points lands on screen (1920 px wide) at time ms, used by the renderer to size motion blur
+const PROBE = []; for (const x of [-22, -11, 0, 11, 22]) for (const y of [0, 6, 14]) for (const z of [10, -10, -30, -58]) PROBE.push(new THREE.Vector3(x, y, z));
+window.probe = (ms) => { ms = ((ms % LOOP) + LOOP) % LOOP; place(shotAt(ms)); cam.updateMatrixWorld();
+  return PROBE.map((v) => { const q = v.clone().project(cam); return [q.x * 960, q.y * 540, q.z]; }); };
+TICK.push((ms) => { post.uniforms.tl.value = ms / LOOP; });
+window.render = (ms) => { ms = ((ms % LOOP) + LOOP) % LOOP; TICK.forEach((f) => f(ms)); place(shotAt(ms)); draw(); };
+window.render(0);
+// ---------- speed: merge every static mesh by material (thousands of draw calls become a few hundred) ----------
+{ scene.updateMatrixWorld(true); const keep = new Set([...CONES, ...GLOW, ...NOINK, ...WALKERS.map((w) => w.g)]); const groups = new Map(), drop = [];
+  const pinned = (o) => { for (let q = o; q; q = q.parent) if (keep.has(q) || q.userData.noMerge) return true; return false; };
+  scene.traverse((o) => { if (!o.isMesh || o.isInstancedMesh || Array.isArray(o.material) || pinned(o) || !o.geometry.attributes.uv || !o.geometry.attributes.normal) return;
+    const k = o.material.uuid + (o.castShadow ? "s" : "") + (o.receiveShadow ? "r" : ""); if (!groups.has(k)) groups.set(k, { m: o.material, cs: o.castShadow, rs: o.receiveShadow, gs: [] });
+    let g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone(); for (const a of Object.keys(g.attributes)) if (!["position", "normal", "uv"].includes(a)) g.deleteAttribute(a); g.morphAttributes = {};
+    g.applyMatrix4(o.matrixWorld); g.clearGroups(); groups.get(k).gs.push(g); drop.push(o); });
+  drop.forEach((o) => o.parent.remove(o));
+  for (const { m, cs, rs, gs } of groups.values()) { const mg = mergeGeometries(gs, false); if (!mg) continue; const mm = new THREE.Mesh(mg, m); mm.castShadow = cs; mm.receiveShadow = rs; mm.frustumCulled = false; scene.add(mm); } }
+// ---------- speed: average a frame's jittered / motion-blur renders on the GPU, so only one image leaves the page ----------
+const frameRT = new THREE.WebGLRenderTarget(PW, PH, { type: THREE.HalfFloatType }), accRT = new THREE.WebGLRenderTarget(PW, PH, { type: THREE.FloatType });
+const quadOf = (frag, uniforms, extra = {}) => { const m = new THREE.ShaderMaterial({ uniforms, vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }", fragmentShader: frag, depthTest: false, depthWrite: false, ...extra });
+  const q = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), m); q.frustumCulled = false; const sc = new THREE.Scene(); sc.add(q); return [sc, m]; };
+const [accScene, accMat] = quadOf("uniform sampler2D t; uniform float w; varying vec2 vUv; void main(){ gl_FragColor = vec4(texture2D(t, vUv).rgb * w, 1.); }", { t: { value: frameRT.texture }, w: { value: 1 } }, { transparent: true, blending: THREE.AdditiveBlending });
+const [outScene] = quadOf("uniform sampler2D t; varying vec2 vUv; void main(){ gl_FragColor = vec4(texture2D(t, vUv).rgb, 1.); }", { t: { value: accRT.texture } });
+window.renderMany = (list) => { R.setRenderTarget(accRT); R.setClearColor(0x000000, 1); R.clear(); accMat.uniforms.w.value = 1 / list.length;
+  for (const [ms, jx, jy] of list) { window.setJitter(jx, jy); const t = ((ms % LOOP) + LOOP) % LOOP; TICK.forEach((f) => f(t)); place(shotAt(t)); draw(frameRT);
+    const ac = R.autoClear; R.autoClear = false; R.setRenderTarget(accRT); R.render(accScene, postCam); R.autoClear = ac; }
+  R.setRenderTarget(null); R.render(outScene, postCam); window.setJitter(0, 0); };
+window.READY = Promise.resolve();
+</script>
