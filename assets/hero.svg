@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="446" viewBox="0 0 1280 446" role="img" aria-label="Perspective Illusion Studio: flat-to-depth city geometry">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090E20"/><stop offset=".55" stop-color="#101A35"/><stop offset="1" stop-color="#17132B"/></linearGradient>
+<linearGradient id="neon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#A8D9FF"/><stop offset=".45" stop-color="#8EA9FF"/><stop offset="1" stop-color="#D7A4FF"/></linearGradient>
+<radialGradient id="light"><stop stop-color="#617CDD" stop-opacity=".28"/><stop offset="1" stop-color="#617CDD" stop-opacity="0"/></radialGradient>
+<pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#A1B4E8" stroke-opacity=".065"/></pattern>
+<clipPath id="frame"><rect width="1280" height="446" rx="18"/></clipPath>
+</defs>
+<g clip-path="url(#frame)">
+<rect width="1280" height="446" fill="url(#bg)"/><rect width="1280" height="446" fill="url(#grid)"/>
+<circle cx="1030" cy="210" r="375" fill="url(#light)"/>
+<g fill="none" stroke-linejoin="round" stroke-linecap="round" transform="translate(740 30)">
+<path d="M0 390L288 120L540 390" stroke="url(#neon)" stroke-opacity=".6" stroke-width="2.4"/>
+<path d="M130 390L288 120L454 390M205 390L288 120L376 390" stroke="#A8BFFF" stroke-opacity=".32" stroke-width="1.5"/>
+<path d="M0 325H540M40 275H500M100 225H440M151 185H389M212 145H337" stroke="#ADB6FF" stroke-opacity=".20" stroke-width="1.4"/>
+<path d="M25 290V85L70 57V255M90 235V42L146 55V205M190 178V46L244 46V155M450 257V42L516 68V310M370 205V60L408 28V220M311 150V30L342 48V161" stroke="#C7C6FF" stroke-opacity=".53" stroke-width="1.5"/>
+<path d="M38 113H66M38 146H66M38 180H66M102 82H136M102 114H136M102 146H136M378 85H399M378 125H399M460 91H505M460 130H505M460 168H505" stroke="#9EAEFF" stroke-opacity=".26" stroke-width="1"/>
+<path d="M108 390L288 196L470 390M167 390L288 216L416 390" stroke="#B8D8FF" stroke-opacity=".28" stroke-width="1.2"/>
+<circle cx="288" cy="120" r="6" fill="#B7C2FF" stroke="none"/><circle cx="288" cy="120" r="29" stroke="#B7C2FF" stroke-opacity=".28"/><path d="M288 82v-22m0 98v22m-38-60h-22m98 0h22" stroke="#B7C2FF" stroke-opacity=".6"/>
+</g>
+<g font-family="Inter,Segoe UI,Arial,sans-serif">
+<rect x="57" y="55" width="186" height="30" rx="15" fill="#B4C1FF" fill-opacity=".10" stroke="#A6B5EE" stroke-opacity=".22"/>
+<circle cx="72" cy="70" r="4" fill="#A8BFFF"/><text x="86" y="75" font-size="11" font-weight="700" letter-spacing="1.8" fill="#CFD8FF">OPEN · BUILD · RENDER</text>
+<text x="54" y="161" font-size="62" font-weight="760" letter-spacing="-2.4" fill="#F8FAFF">Perspective</text>
+<text x="54" y="229" font-size="62" font-weight="760" letter-spacing="-2.4" fill="url(#neon)">Illusion Studio</text>
+<text x="57" y="273" font-size="18" fill="#C0CAE7">From a flat illustration to a living 3D city.</text>
+<text x="57" y="306" font-size="16" fill="#889CC8">A reproducible Three.js filmmaking skill.</text>
+<path d="M58 343H451" stroke="#8297C5" stroke-opacity=".23"/>
+<text x="58" y="375" fill="#DAE3FF" font-size="13" font-weight="700" letter-spacing="1.2">02° TELEPHOTO</text>
+<text x="217" y="375" fill="#A4B9FF" font-size="19">→</text>
+<text x="253" y="375" fill="#DAE3FF" font-size="13" font-weight="700" letter-spacing="1.2">84° REVEAL</text>
+<text x="57" y="417" fill="#7686B2" font-size="11" letter-spacing="1.5">DREAMINMASTER × CHATGPT · BASED ON SIMCRAFT</text>
+</g><rect x=".7" y=".7" width="1278.6" height="444.6" rx="18" stroke="#C3CCFF" stroke-opacity=".12" fill="none"/>
+</g></svg>
