@@ -17,8 +17,20 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --location --retry 3 --retry-delay 3 \
-            "https://tmpfiles.org/dl/1794372004.8d4f7fdd509346a2/wiAqWLkee1D2/perspective-illusion-studio-v1.0.0.zip" \
-            --output /tmp/skill.zip
+            "https://tmpfiles.org/wiAqWLkee1D2/perspective-illusion-studio-v1.0.0.zip" \
+            --output /tmp/skill-download-page.html
+          python3 - <<'PY' > /tmp/skill-url.txt
+          import re
+          from pathlib import Path
+          from html import unescape
+          html = Path("/tmp/skill-download-page.html").read_text()
+          link = re.search(r'class="download" href="([^"]+)"', html)
+          if not link:
+              raise RuntimeError("Could not find actual downloadable ZIP link")
+          print(unescape(link.group(1)))
+          PY
+          curl --fail --location --retry 3 --retry-delay 3 \
+            "$(cat /tmp/skill-url.txt)" --output /tmp/skill.zip
           echo "a54bef60f465c68d500885e2ea24fa9f464731bcda2a27928a05675b2b7b3f02  /tmp/skill.zip" | sha256sum --check
           mkdir -p /tmp/skill-import
           unzip -q /tmp/skill.zip -d /tmp/skill-import
