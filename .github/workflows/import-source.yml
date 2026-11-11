@@ -1,0 +1,58 @@
+name: Import verified Simcraft adaptation and Shibuya demo
+on:
+  push:
+    paths:
+      - ".github/workflows/import-source.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download and verify Skill bundle
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-delay 3 \
+            "https://tmpfiles.org/dl/1794372004.8d4f7fdd509346a2/wiAqWLkee1D2/perspective-illusion-studio-v1.0.0.zip" \
+            --output /tmp/skill.zip
+          echo "a54bef60f465c68d500885e2ea24fa9f464731bcda2a27928a05675b2b7b3f02  /tmp/skill.zip" | sha256sum --check
+          mkdir -p /tmp/skill-import
+          unzip -q /tmp/skill.zip -d /tmp/skill-import
+          test -f /tmp/skill-import/perspective-illusion-studio/SKILL.md
+          test -f /tmp/skill-import/perspective-illusion-studio/examples/shibuya-demo.mp4
+          rsync -a --exclude README.md \
+            /tmp/skill-import/perspective-illusion-studio/ ./
+      - name: Generate scene stills and animated preview
+        run: |
+          set -euo pipefail
+          command -v ffmpeg
+          mkdir -p assets/stills
+          ffmpeg -nostdin -y -loglevel error -ss 0 -i examples/shibuya-demo.mp4 -frames:v 1 -q:v 2 assets/stills/01-flat.jpg
+          ffmpeg -nostdin -y -loglevel error -ss 3.6 -i examples/shibuya-demo.mp4 -frames:v 1 -q:v 2 assets/stills/02-reveal.jpg
+          ffmpeg -nostdin -y -loglevel error -ss 7.7 -i examples/shibuya-demo.mp4 -frames:v 1 -q:v 2 assets/stills/03-corner.jpg
+          ffmpeg -nostdin -y -loglevel error -i examples/shibuya-demo.mp4 \
+            -filter_complex "[0:v]fps=9,scale=760:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=128[p];[b][p]paletteuse=dither=bayer:bayer_scale=3" \
+            -loop 0 assets/shibuya-loop.gif
+          test -s assets/shibuya-loop.gif
+          ffprobe -v error -show_entries stream=codec_name,width,height,avg_frame_rate \
+            -show_entries format=duration -of default=noprint_wrappers=1 examples/shibuya-demo.mp4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: |
+          npm ci
+          npm test
+      - name: Commit complete source and video
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Add Shibuya 3D source, renderers, 10-second video and previews [skip ci]"
+            git push
+          fi
