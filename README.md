@@ -13,7 +13,7 @@ layered, explorable Three.js environments — with real geometry and camera moti
 
 <br/><br/>
 
-<a href="#selected-worlds">Explore the films</a> &nbsp;·&nbsp;
+<a href="#featured-films">Watch the films</a> &nbsp;·&nbsp;
 <a href="#the-illusion">How it works</a> &nbsp;·&nbsp;
 <a href="#get-started">Get started</a> &nbsp;·&nbsp;
 <a href="SKILL.md">Read the Skill</a> &nbsp;·&nbsp;
@@ -29,41 +29,68 @@ layered, explorable Three.js environments — with real geometry and camera moti
 
 ---
 
-## Selected worlds
+## Featured films
 
-**Three original visual experiments. One camera language.** Every film below comes with its editable scene and rendering source; the videos are the results of real 3D renders, not animated reference stills.
+**The two scenes that best show how this Skill transforms space.** Watch a complete camera move right here, then open the video or explore its editable source.
 
 <table>
 <tr>
-<td width="33%" valign="top">
-  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/poster.jpg" width="100%" alt="AETERNA — an imagined Greco-Roman imperial forum at sunset" /></a>
+<td width="50%" valign="top">
+  <a href="examples/shibuya-demo.mp4"><img src="assets/shibuya-loop.gif" width="100%" alt="Animated original Shibuya Scramble scene: a compressed city view expands into a 3D street crossing" /></a>
   <br/><br/>
-  <sub>01 &nbsp;/&nbsp; CLASSICAL WORLD</sub>
-  <h3>AETERNA</h3>
-  <p>An invented Greco-Roman capital. Marble temples, a triumphal arch, fountain and a city unfolding at sunset.</p>
-  <p><a href="scenes/aeterna-forum/aeterna_final.mp4"><strong>Watch film</strong></a> &nbsp;·&nbsp; <a href="scenes/aeterna-forum/">3D project</a></p>
-</td>
-<td width="33%" valign="top">
-  <a href="scenes/night-city-2077/night_city_2077.mp4"><img src="scenes/night-city-2077/poster.jpg" width="100%" alt="Night City 2077 — a fictional neon-futurist metropolis" /></a>
-  <br/><br/>
-  <sub>02 &nbsp;/&nbsp; FUTURISTIC WORLD</sub>
-  <h3>NIGHT CITY 2077</h3>
-  <p>Neon megastructures, aerial vehicles and holographic streets, inspired by cyberpunk aesthetics.</p>
-  <p><a href="scenes/night-city-2077/night_city_2077.mp4"><strong>Watch film</strong></a> &nbsp;·&nbsp; <a href="scenes/night-city-2077/">3D project</a></p>
-</td>
-<td width="33%" valign="top">
-  <a href="examples/shibuya-demo.mp4"><img src="assets/stills/02-reveal.jpg" width="100%" alt="Shibuya Scramble — stylised Tokyo street crossing" /></a>
-  <br/><br/>
-  <sub>03 &nbsp;/&nbsp; URBAN WORLD</sub>
+  <sub>01 / THE ORIGINAL STUDY · TOKYO</sub>
   <h3>SHIBUYA SCRAMBLE</h3>
-  <p>The original collaboration: a rain-soaked Tokyo-inspired crossing with signs, crowds and layered architecture.</p>
-  <p><a href="examples/shibuya-demo.mp4"><strong>Watch film</strong></a> &nbsp;·&nbsp; <a href="scene.html">3D scene</a></p>
+  <p>Our first camera experiment. A rain-lit Tokyo crossing transforms from a graphic street tableau into an explorable 3D city.</p>
+  <p><a href="examples/shibuya-demo.mp4"><strong>▶ Watch film</strong></a> &nbsp;·&nbsp; <a href="explore.html">Explore in 3D</a></p>
+</td>
+<td width="50%" valign="top">
+  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/preview.gif" width="100%" alt="Animated AETERNA Greco-Roman forum showing an actual telephoto to wide-angle 3D perspective reveal" /></a>
+  <br/><br/>
+  <sub>02 / THE CLASSICAL WORLD · AETERNA</sub>
+  <h3>THE ETERNAL FORUM</h3>
+  <p>Marble columns, a ceremonial arch and an imaginary imperial city unfold beneath the warm Mediterranean sunset.</p>
+  <p><a href="scenes/aeterna-forum/aeterna_final.mp4"><strong>▶ Watch film + score</strong></a> &nbsp;·&nbsp; <a href="scenes/aeterna-forum/">Explore source</a></p>
 </td>
 </tr>
 </table>
 
-<sub>All three showcase films: approximately 10 seconds · 1280 × 720 · 15 native FPS. The environments are stylised and fictionalised; they are not exact recreations of real places or game scenes.</sub>
+<div align="center">
+  <sub>Two genuine 3D render sequences, not zoomed still images. Select either animation to open its full MP4.</sub>
+</div>
 
+<br/>
+
+## Selected worlds
+
+A small collection of three environments, all created with the same camera method. **Tokyo and AETERNA lead the visual story; Night City remains a complete third example.**
+
+<table>
+<tr>
+<td width="33%" valign="top">
+  <a href="examples/shibuya-demo.mp4"><img src="assets/stills/02-reveal.jpg" width="100%" alt="Shibuya Scramble illustrated night street still" /></a>
+  <br/>
+  <sub>URBAN / TOKYO</sub>
+  <p><strong>Shibuya Scramble</strong><br/>Wet neon streets, animated crowds and an interactive free-camera viewer.</p>
+  <p><a href="examples/shibuya-demo.mp4">MP4</a> · <a href="explore.html">Viewer</a> · <a href="scene.html">Source</a></p>
+</td>
+<td width="33%" valign="top">
+  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/poster.jpg" width="100%" alt="AETERNA Greco-Roman imperial forum still" /></a>
+  <br/>
+  <sub>CLASSICAL / AETERNA</sub>
+  <p><strong>The Eternal Forum</strong><br/>An imaginary empire with temples, arches, sculptural fountains and a bespoke score.</p>
+  <p><a href="scenes/aeterna-forum/aeterna_final.mp4">MP4</a> · <a href="scenes/aeterna-forum/">Source & audio</a></p>
+</td>
+<td width="33%" valign="top">
+  <a href="scenes/night-city-2077/night_city_2077.mp4"><img src="scenes/night-city-2077/poster.jpg" width="100%" alt="Night City 2077 neon-futurist 3D city still" /></a>
+  <br/>
+  <sub>FUTURISTIC / NIGHT CITY</sub>
+  <p><strong>Night City 2077</strong><br/>A neon-drenched futuristic variation with hovercars, megatowers and synth music.</p>
+  <p><a href="scenes/night-city-2077/night_city_2077.mp4">MP4</a> · <a href="scenes/night-city-2077/">Source & audio</a></p>
+</td>
+</tr>
+</table>
+
+<sub>Every film: approximately 10 seconds · 1280 × 720 · 15 native FPS · H.264. These are stylised and fictionalised worlds, not exact historical, geographic or game reconstructions.</sub>
 ---
 
 ## The illusion
@@ -82,14 +109,6 @@ A perspective illusion is not a zoom applied to a finished image. The world is b
 <td><strong>03 — Reframe</strong><br/><sub>A new oblique angle makes the hidden spatial relationships visible again.</sub></td>
 </tr>
 </table>
-
-<div align="center">
-  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/preview.gif" width="76%" alt="AETERNA Greco-Roman forum — animated perspective reveal rendered in Three.js" /></a>
-  <br/>
-  <sub>Featured motion study: <a href="scenes/aeterna-forum/aeterna_final.mp4">AETERNA with original score</a> · <a href="scenes/aeterna-forum/storyboard.jpg">Camera storyboard</a></sub>
-</div>
-
-<br/>
 
 The underlying dolly-zoom relationship is:
 
