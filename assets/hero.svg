@@ -1,34 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="446" viewBox="0 0 1280 446" role="img" aria-label="Perspective Illusion Studio: flat-to-depth city geometry">
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="448" viewBox="0 0 1400 448" role="img" aria-label="Perspective Illusion Studio — three worlds, one camera language">
 <defs>
-<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#090E20"/><stop offset=".55" stop-color="#101A35"/><stop offset="1" stop-color="#17132B"/></linearGradient>
-<linearGradient id="neon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#A8D9FF"/><stop offset=".45" stop-color="#8EA9FF"/><stop offset="1" stop-color="#D7A4FF"/></linearGradient>
-<radialGradient id="light"><stop stop-color="#617CDD" stop-opacity=".28"/><stop offset="1" stop-color="#617CDD" stop-opacity="0"/></radialGradient>
-<pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#A1B4E8" stroke-opacity=".065"/></pattern>
-<clipPath id="frame"><rect width="1280" height="446" rx="18"/></clipPath>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#0B1123"/><stop offset=".58" stop-color="#101A31"/><stop offset="1" stop-color="#19162D"/>
+  </linearGradient>
+  <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#FBFCFF"/><stop offset=".63" stop-color="#D1E2FA"/><stop offset="1" stop-color="#9FC1FF"/>
+  </linearGradient>
+  <linearGradient id="holo" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#D6AA7B"/><stop offset=".5" stop-color="#8EB5EF"/><stop offset="1" stop-color="#D5A4D8"/>
+  </linearGradient>
+  <radialGradient id="glow"><stop stop-color="#7B9CE4" stop-opacity=".22"/><stop offset="1" stop-color="#7B9CE4" stop-opacity="0"/></radialGradient>
+  <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".6" fill="#B8C7F5" opacity=".12"/></pattern>
+  <clipPath id="clip"><rect width="1400" height="448" rx="20"/></clipPath>
 </defs>
-<g clip-path="url(#frame)">
-<rect width="1280" height="446" fill="url(#bg)"/><rect width="1280" height="446" fill="url(#grid)"/>
-<circle cx="1030" cy="210" r="375" fill="url(#light)"/>
-<g fill="none" stroke-linejoin="round" stroke-linecap="round" transform="translate(740 30)">
-<path d="M0 390L288 120L540 390" stroke="url(#neon)" stroke-opacity=".6" stroke-width="2.4"/>
-<path d="M130 390L288 120L454 390M205 390L288 120L376 390" stroke="#A8BFFF" stroke-opacity=".32" stroke-width="1.5"/>
-<path d="M0 325H540M40 275H500M100 225H440M151 185H389M212 145H337" stroke="#ADB6FF" stroke-opacity=".20" stroke-width="1.4"/>
-<path d="M25 290V85L70 57V255M90 235V42L146 55V205M190 178V46L244 46V155M450 257V42L516 68V310M370 205V60L408 28V220M311 150V30L342 48V161" stroke="#C7C6FF" stroke-opacity=".53" stroke-width="1.5"/>
-<path d="M38 113H66M38 146H66M38 180H66M102 82H136M102 114H136M102 146H136M378 85H399M378 125H399M460 91H505M460 130H505M460 168H505" stroke="#9EAEFF" stroke-opacity=".26" stroke-width="1"/>
-<path d="M108 390L288 196L470 390M167 390L288 216L416 390" stroke="#B8D8FF" stroke-opacity=".28" stroke-width="1.2"/>
-<circle cx="288" cy="120" r="6" fill="#B7C2FF" stroke="none"/><circle cx="288" cy="120" r="29" stroke="#B7C2FF" stroke-opacity=".28"/><path d="M288 82v-22m0 98v22m-38-60h-22m98 0h22" stroke="#B7C2FF" stroke-opacity=".6"/>
+<g clip-path="url(#clip)">
+  <rect width="1400" height="448" fill="url(#bg)"/>
+  <rect width="1400" height="448" fill="url(#dots)"/>
+  <circle cx="1080" cy="208" r="372" fill="url(#glow)"/>
+  <path d="M0 390H1400" stroke="#A3B4DB" stroke-opacity=".17"/>
+  <path d="M815 0V448" stroke="#A3B4DB" stroke-opacity=".10"/>
+  <g font-family="Inter,Arial,Helvetica,sans-serif">
+    <text x="77" y="72" font-size="14" font-weight="700" letter-spacing="3.9" fill="#A9C5ED">P / I</text>
+    <path d="M130 66H209" stroke="#A9C5ED" stroke-opacity=".55"/>
+    <text x="224" y="72" font-size="12" letter-spacing="2.5" fill="#ACB8CF">AN OPEN CAMERA-CRAFT TOOLKIT</text>
+    <text x="69" y="180" font-size="80" font-weight="780" letter-spacing="-3.4" fill="url(#title)">Perspective</text>
+    <text x="69" y="266" font-size="78" font-weight="780" letter-spacing="-3.4" fill="url(#title)">Illusion</text>
+    <text x="74" y="315" font-size="31" font-weight="520" letter-spacing="15" fill="#C5D7F4">STUDIO</text>
+    <text x="76" y="359" font-size="17" letter-spacing=".25" fill="#9DACCB">A flat world, until the lens reveals its depth.</text>
+    <text x="77" y="422" font-size="12" font-weight="650" letter-spacing="2" fill="#99ABC9">DREAMINMASTER</text>
+    <circle cx="251" cy="417" r="2.3" fill="#D3AD79"/>
+    <text x="266" y="422" font-size="12" letter-spacing="1.6" fill="#758CA9">THREE.JS</text>
+    <circle cx="369" cy="417" r="2.3" fill="#B4A1DD"/>
+    <text x="384" y="422" font-size="12" letter-spacing="1.6" fill="#758CA9">SIMCRAFT · MIT</text>
+  </g>
+  <g fill="none" stroke-linejoin="round" stroke-linecap="round">
+    <!-- field of view schematic and ground plane -->
+    <path d="M844 384L1108 166L1385 384" stroke="#D6E5FF" stroke-opacity=".42" stroke-width="2.2"/>
+    <path d="M915 384L1108 166L1310 384" stroke="#92BAF4" stroke-opacity=".39" stroke-width="1.4"/>
+    <path d="M984 384L1108 166L1247 384" stroke="#99AEE3" stroke-opacity=".28" stroke-width="1.3"/>
+    <path d="M1053 384L1108 166L1177 384" stroke="#92BAF4" stroke-opacity=".26" stroke-width="1"/>
+    <path d="M849 359H1380M889 334H1340M936 306H1296M971 278H1262M1009 249H1225M1035 220H1190" stroke="#B0C5EC" stroke-opacity=".17" stroke-width="1.15"/>
+    <!-- two staggered frame depths -->
+    <path d="M905 365V94L958 70V329M958 70L1054 114V287M905 94L1014 138V338M1014 138L1054 114" stroke="#C5B08C" stroke-opacity=".75" stroke-width="1.7"/>
+    <path d="M1191 297V106L1266 78V346M1266 78L1320 118V361M1191 106L1249 147V343M1249 147L1320 118" stroke="#C8A4D8" stroke-opacity=".7" stroke-width="1.7"/>
+    <path d="M1014 138L1108 166L1249 147" stroke="#BFCBF0" stroke-opacity=".5" stroke-dasharray="5 7"/>
+    <!-- distance layers -->
+    <path d="M930 362L930 119M946 351L946 110M1210 306V129M1235 321V111" stroke="#ABC5EF" stroke-opacity=".21"/>
+    <path d="M845 385H1398" stroke="url(#holo)" stroke-opacity=".66" stroke-width="2"/>
+    <path d="M966 344H1271" stroke="#C5D5FE" stroke-opacity=".18" stroke-width="1.5"/>
+    <circle cx="1108" cy="166" r="5" fill="#B3CFF9" stroke="#B3CFF9"/>
+    <circle cx="1108" cy="166" r="23" stroke="#B3CFF9" stroke-opacity=".34" stroke-width="1.3"/>
+    <path d="M1108 128V115M1108 205V218M1070 166H1057M1146 166H1159" stroke="#B7CFF5" stroke-opacity=".72"/>
+  </g>
+  <g font-family="Inter,Arial,sans-serif" font-size="12" font-weight="680" letter-spacing="1.2">
+    <rect x="871" y="50" width="207" height="30" rx="15" fill="#9BB4E7" fill-opacity=".12" stroke="#A9C1EE" stroke-opacity=".22"/>
+    <text x="891" y="69" fill="#CCD9F2">02°  /  TELEPHOTO</text>
+    <rect x="1173" y="50" width="153" height="30" rx="15" fill="#D7B48E" fill-opacity=".10" stroke="#D7B48E" stroke-opacity=".22"/>
+    <text x="1191" y="69" fill="#E2C5A0">84° / WIDE</text>
+    <text x="878" y="419" fill="#B8C9E7">03 WORLDS</text>
+    <circle cx="1022" cy="415" r="4" fill="#D4AB80"/>
+    <text x="1036" y="419" fill="#A2ADC7">CLASSICAL</text>
+    <circle cx="1167" cy="415" r="4" fill="#C5A0DB"/>
+    <text x="1181" y="419" fill="#A2ADC7">FUTURISTIC</text>
+    <circle cx="1332" cy="415" r="4" fill="#8AC7EC"/>
+  </g>
+  <rect x="1" y="1" width="1398" height="446" rx="19" fill="none" stroke="#C0CEE7" stroke-opacity=".14"/>
 </g>
-<g font-family="Inter,Segoe UI,Arial,sans-serif">
-<rect x="57" y="55" width="186" height="30" rx="15" fill="#B4C1FF" fill-opacity=".10" stroke="#A6B5EE" stroke-opacity=".22"/>
-<circle cx="72" cy="70" r="4" fill="#A8BFFF"/><text x="86" y="75" font-size="11" font-weight="700" letter-spacing="1.8" fill="#CFD8FF">OPEN · BUILD · RENDER</text>
-<text x="54" y="161" font-size="62" font-weight="760" letter-spacing="-2.4" fill="#F8FAFF">Perspective</text>
-<text x="54" y="229" font-size="62" font-weight="760" letter-spacing="-2.4" fill="url(#neon)">Illusion Studio</text>
-<text x="57" y="273" font-size="18" fill="#C0CAE7">From a flat illustration to a living 3D city.</text>
-<text x="57" y="306" font-size="16" fill="#889CC8">A reproducible Three.js filmmaking skill.</text>
-<path d="M58 343H451" stroke="#8297C5" stroke-opacity=".23"/>
-<text x="58" y="375" fill="#DAE3FF" font-size="13" font-weight="700" letter-spacing="1.2">02° TELEPHOTO</text>
-<text x="217" y="375" fill="#A4B9FF" font-size="19">→</text>
-<text x="253" y="375" fill="#DAE3FF" font-size="13" font-weight="700" letter-spacing="1.2">84° REVEAL</text>
-<text x="57" y="417" fill="#7686B2" font-size="11" letter-spacing="1.5">DREAMINMASTER × CHATGPT · BASED ON SIMCRAFT</text>
-</g><rect x=".7" y=".7" width="1278.6" height="444.6" rx="18" stroke="#C3CCFF" stroke-opacity=".12" fill="none"/>
-</g></svg>
+</svg>
