@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+*.log
+out/
+preview.mp4
+final_crisp.mp4
+final_high.mp4
+stills/
+*.tmp
