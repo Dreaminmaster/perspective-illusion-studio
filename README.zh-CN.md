@@ -51,6 +51,26 @@
 </tr></tbody>
 </table>
 
+## 🌃 新作品 · Night City 2077
+
+<div align="center">
+
+<a href="scenes/night-city-2077/night_city_2077.mp4"><img src="scenes/night-city-2077/preview.gif" width="90%" alt="Night City 2077 霓虹未来都市的三维透视错觉视频" /></a>
+
+<br/>
+
+**[▶ 播放含原创电子配乐的完整 MP4](scenes/night-city-2077/night_city_2077.mp4)**
+
+[**查看全部可编辑三维源码**](scenes/night-city-2077/) · [**查看镜头说明**](scenes/night-city-2077/README.md)
+
+<sub>10 秒 · 1280 × 720 · 15 FPS 原生渲染 · 2° → 84° 透视展开</sub>
+
+</div>
+
+以《赛博朋克 2077》的霓虹反乌托邦氛围为灵感，在原版 Skill 的真实 Three.js 场景中加入了大型未来高楼、全息广告、空中轨道、悬浮出租车、雨夜反射和原创电子配乐。
+
+这是一段**原创的赛博朋克主题三维短片**，不是游戏实机录像或游戏官方素材。它不依赖运动插帧，局部细线闪烁仍可能存在。视频、音轨、源代码和 12 张场景素材都已经放进仓库。
+
 ## 这次我们改进了什么？
 
 | 重点 | 共同改进 |
