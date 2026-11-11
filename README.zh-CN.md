@@ -51,6 +51,28 @@
 </tr></tbody>
 </table>
 
+## 🏛️ 最新作品 · AETERNA 永恒帝国广场
+
+一个完全虚构的希腊—罗马帝国古典广场：凯旋门、神庙、圆形圣殿、柱廊、竞技场、海神喷泉、集市和雕像全部由 Three.js 三维几何体构成。黄昏的粉紫色天空与金色大理石共同营造古典幻想城市的氛围。
+
+<div align="center">
+
+<a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/preview.gif" width="90%" alt="AETERNA 古希腊古罗马广场的真实三维透视错觉动画" /></a>
+
+<br/>
+
+**[▶ 播放 AETERNA 完整有声 MP4](scenes/aeterna-forum/aeterna_final.mp4)**
+
+[**查看全部可编辑三维源代码**](scenes/aeterna-forum/) · [**打开项目说明**](scenes/aeterna-forum/README.zh-CN.md) · [**查看四个关键镜头**](scenes/aeterna-forum/storyboard.jpg)
+
+<sub>10 秒 · 1280 × 720 · 15 FPS 原生三维渲染 · 2° 长焦 → 84° 广角 → 26° 侧面展开</sub>
+
+</div>
+
+本片使用我们的 Perspective Illusion Studio Skill，画面变换来自真正的三维镜头运动，而不是使用参考图制作缩放视频；配乐亦为原创合成的竖琴、长笛、弦乐及喷泉氛围音。
+
+**风格说明：** 当前效果属于风格化的三维插画，和用户提供的高写实参考图并非同一种画质。细小装饰线条可能有轻微闪烁。
+
 ## 🌃 新作品 · Night City 2077
 
 <div align="center">
