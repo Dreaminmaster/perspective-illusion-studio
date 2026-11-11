@@ -13,7 +13,7 @@
 
 <br/><br/>
 
-<a href="#作品集">作品集</a> &nbsp;·&nbsp;
+<a href="#开场精选--透视错觉实拍">观看动态作品</a> &nbsp;·&nbsp;
 <a href="#透视错觉是怎样实现的">镜头原理</a> &nbsp;·&nbsp;
 <a href="#开始使用">运行方法</a> &nbsp;·&nbsp;
 <a href="SKILL.md">技能原文</a> &nbsp;·&nbsp;
@@ -29,41 +29,68 @@
 
 ---
 
-## 作品集
+## 开场精选 · 透视错觉实拍
 
-**三个不同的世界，共用一套真实三维摄影机方法。** 每部短片都保留了场景源文件和渲染脚本，不是把一张图片放大缩小。
+**把最有代表性的两种变化直接放在首页。** 左边是我们最初的东京涩谷场景，右边是新制作的古希腊—古罗马幻想广场。两段动画都由真实的 Three.js 摄影机和三维几何体渲染，并非图片放大或转场特效。
 
 <table>
 <tr>
-<td width="33%" valign="top">
-  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/poster.jpg" width="100%" alt="AETERNA 永恒之城：虚构的古希腊和古罗马帝国广场" /></a>
+<td width="50%" valign="top">
+  <a href="examples/shibuya-demo.mp4"><img src="assets/shibuya-loop.gif" width="100%" alt="涩谷十字路口三维动画：长焦压缩的夜间街景逐渐展开为立体空间" /></a>
   <br/><br/>
-  <sub>01 &nbsp;/&nbsp; 古典幻想</sub>
-  <h3>AETERNA</h3>
-  <p>架空的希腊—罗马帝国广场。大理石神庙、凯旋门、喷泉和黄昏中的层层柱廊。</p>
-  <p><a href="scenes/aeterna-forum/aeterna_final.mp4"><strong>观看视频</strong></a> &nbsp;·&nbsp; <a href="scenes/aeterna-forum/">三维工程</a></p>
-</td>
-<td width="33%" valign="top">
-  <a href="scenes/night-city-2077/night_city_2077.mp4"><img src="scenes/night-city-2077/poster.jpg" width="100%" alt="Night City 2077：原创的霓虹未来都市" /></a>
-  <br/><br/>
-  <sub>02 &nbsp;/&nbsp; 未来都市</sub>
-  <h3>NIGHT CITY 2077</h3>
-  <p>霓虹高楼、全息广告、悬浮交通与湿润街道，以赛博朋克美学为灵感。</p>
-  <p><a href="scenes/night-city-2077/night_city_2077.mp4"><strong>观看视频</strong></a> &nbsp;·&nbsp; <a href="scenes/night-city-2077/">三维工程</a></p>
-</td>
-<td width="33%" valign="top">
-  <a href="examples/shibuya-demo.mp4"><img src="assets/stills/02-reveal.jpg" width="100%" alt="Shibuya Scramble：风格化的东京涩谷十字路口" /></a>
-  <br/><br/>
-  <sub>03 &nbsp;/&nbsp; 城市街景</sub>
+  <sub>01 / 最初的镜头实验 · 东京</sub>
   <h3>SHIBUYA SCRAMBLE</h3>
-  <p>合作的起点：雨夜东京风格街道、斑马线、商铺招牌、人群和立体建筑。</p>
-  <p><a href="examples/shibuya-demo.mp4"><strong>观看视频</strong></a> &nbsp;·&nbsp; <a href="scene.html">三维场景</a></p>
+  <p>我们的第一部合作作品。雨夜街道从接近平面的城市插画，转变成可以亲自探索的三维涩谷。</p>
+  <p><a href="examples/shibuya-demo.mp4"><strong>▶ 播放视频</strong></a> &nbsp;·&nbsp; <a href="explore.html">三维自由探索</a></p>
+</td>
+<td width="50%" valign="top">
+  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/preview.gif" width="100%" alt="AETERNA 古典帝国广场三维动画：长焦镜头逐渐展开大理石神庙与凯旋门的纵深" /></a>
+  <br/><br/>
+  <sub>02 / 古典幻想世界 · 永恒之城</sub>
+  <h3>AETERNA</h3>
+  <p>大理石柱廊、凯旋门、神庙与喷泉，在暖金色黄昏中随着镜头推进逐层展开。</p>
+  <p><a href="scenes/aeterna-forum/aeterna_final.mp4"><strong>▶ 播放有声视频</strong></a> &nbsp;·&nbsp; <a href="scenes/aeterna-forum/">查看三维源码</a></p>
 </td>
 </tr>
 </table>
 
-<sub>三个示例均为约 10 秒、1280 × 720、15 FPS 原生三维渲染。所有街景均作了艺术化处理，不代表对真实地点或游戏场景的精确复原。</sub>
+<div align="center">
+  <sub>两段均为真实三维动画，而非静态图片变焦。点击任意动图即可打开对应的完整 MP4。</sub>
+</div>
 
+<br/>
+
+## 作品集
+
+**三部成品，一套摄影机语言。** 首页重点展示东京与罗马的动态差异；赛博朋克作品仍完整保留在作品集里，并附带视频、源代码和原创音乐。
+
+<table>
+<tr>
+<td width="33%" valign="top">
+  <a href="examples/shibuya-demo.mp4"><img src="assets/stills/02-reveal.jpg" width="100%" alt="东京涩谷雨夜街道三维场景截图" /></a>
+  <br/>
+  <sub>城市街景 / TOKYO</sub>
+  <p><strong>Shibuya Scramble</strong><br/>雨夜霓虹、斑马线、人群与可自由操作的三维摄影机。</p>
+  <p><a href="examples/shibuya-demo.mp4">视频</a> · <a href="explore.html">交互查看</a> · <a href="scene.html">源码</a></p>
+</td>
+<td width="33%" valign="top">
+  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/poster.jpg" width="100%" alt="AETERNA 虚构古罗马广场三维场景截图" /></a>
+  <br/>
+  <sub>古典幻想 / AETERNA</sub>
+  <p><strong>永恒帝国广场</strong><br/>古典神庙、凯旋门、雕像、喷泉与原创配乐。</p>
+  <p><a href="scenes/aeterna-forum/aeterna_final.mp4">视频</a> · <a href="scenes/aeterna-forum/">源码与音乐</a></p>
+</td>
+<td width="33%" valign="top">
+  <a href="scenes/night-city-2077/night_city_2077.mp4"><img src="scenes/night-city-2077/poster.jpg" width="100%" alt="Night City 2077 霓虹未来都市三维场景截图" /></a>
+  <br/>
+  <sub>未来都市 / NIGHT CITY</sub>
+  <p><strong>Night City 2077</strong><br/>悬浮车、未来高楼、全息广告和电子音乐。</p>
+  <p><a href="scenes/night-city-2077/night_city_2077.mp4">视频</a> · <a href="scenes/night-city-2077/">源码与音乐</a></p>
+</td>
+</tr>
+</table>
+
+<sub>三个示例均约为 10 秒、1280 × 720、15 FPS 原生三维渲染。所有场景均为艺术化创作，不宣称精确还原真实地点或游戏建筑。</sub>
 ---
 
 ## 透视错觉是怎样实现的
@@ -82,14 +109,6 @@
 <td><strong>03 — 换角度</strong><br/><sub>再从侧向观察，让原来难以察觉的空间关系重新出现。</sub></td>
 </tr>
 </table>
-
-<div align="center">
-  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/preview.gif" width="76%" alt="AETERNA 古典广场：真实 Three.js 透视错觉动态预览" /></a>
-  <br/>
-  <sub>精选动态演示：<a href="scenes/aeterna-forum/aeterna_final.mp4">AETERNA 有声视频</a> · <a href="scenes/aeterna-forum/storyboard.jpg">查看镜头对比图</a></sub>
-</div>
-
-<br/>
 
 摄影机与对焦平面之间的关系可以写成：
 
