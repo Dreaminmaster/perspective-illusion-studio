@@ -56,4 +56,17 @@ const cyberScene = read(nightCity + 'scene.html');
 assert.ok(cyberScene.includes('CYBERPUNK CITY EXPANSION'), 'Missing futuristic geometry');
 assert.ok(cyberScene.includes('fov:84') && cyberScene.includes('fov:79'), 'Missing strong dolly zoom');
 assert.ok(fs.statSync(nightCity + 'night_city_2077.mp4').size > 1_000_000, 'Night City MP4 missing');
+
+const ancient = 'scenes/aeterna-forum/';
+for (const file of [
+  'scene.html','render.mjs','roman_geometry.js','simcraft_base.html',
+  'assemble.py','README.md','README.zh-CN.md','LICENSE',
+  'aeterna_final.mp4','aeterna_native_silent.mp4',
+  'aeterna_original_score.wav','soundtrack.py','preview.gif','poster.jpg'
+]) assert.ok(fs.existsSync(ancient + file),'Missing AETERNA deliverable: ' + file);
+const ancientSource = read(ancient + 'scene.html');
+assert.ok(ancientSource.includes('const GATE=group'), 'Missing Roman triumphal arch construction');
+assert.ok(ancientSource.includes('fov:2.0') && ancientSource.includes('fov:84'),
+  'Missing telephoto to wide-angle lens transformation');
+assert.ok(fs.statSync(ancient + 'aeterna_final.mp4').size>1000000, 'AETERNA final MP4 is too small');
 console.log(`Skill checks passed: metadata, hooks, camera, crisp rendering, ${textureCount} cutouts, MP4, license.`);
