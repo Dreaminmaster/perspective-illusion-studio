@@ -1,186 +1,130 @@
 <div align="center">
 
-<img src="assets/hero.svg" width="100%" alt="Perspective Illusion Studio — cinematic flat-to-3D Tokyo city" />
-
-<br/><br/>
-
-<a href="SKILL.md"><img src="https://img.shields.io/badge/AI%20SKILL-READY-A9B9FF?style=flat-square&labelColor=17203B" alt="AI Skill"/></a>
-<a href="https://threejs.org/"><img src="https://img.shields.io/badge/ENGINE-THREE.JS-8CD7EE?style=flat-square&labelColor=17203B" alt="Three.js"/></a>
-<a href="examples/shibuya-demo.mp4"><img src="https://img.shields.io/badge/SHOWCASE-SHIBUYA-D7A9FF?style=flat-square&labelColor=17203B" alt="Shibuya Showcase"/></a>
-<a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-CBD5F0?style=flat-square&labelColor=17203B" alt="MIT"/></a>
-
-<br/><br/>
-
-**Cinematic optical illusions. Built from real, editable 3D.**
-
-An open filmmaking Skill developed through a collaborative Tokyo Shibuya project.
+<img src="assets/hero.svg" width="100%" alt="Perspective Illusion Studio — an open filmmaking toolkit for camera-based 3D optical illusions" />
 
 <br/>
 
-[**Explore the demo**](#-tokyo--shibuya-scramble) &nbsp;·&nbsp;
-[**Read the Skill**](SKILL.md) &nbsp;·&nbsp;
-[**Quick start**](#-quick-start) &nbsp;·&nbsp;
-[**简体中文**](README.zh-CN.md)
+<strong>One scene. Two perspectives. An entirely different world.</strong>
+
+<br/><br/>
+
+A reusable filmmaking Skill for transforming apparently flat illustrations into  
+layered, explorable Three.js environments — with real geometry and camera motion.
+
+<br/><br/>
+
+<a href="#selected-worlds">Explore the films</a> &nbsp;·&nbsp;
+<a href="#the-illusion">How it works</a> &nbsp;·&nbsp;
+<a href="#get-started">Get started</a> &nbsp;·&nbsp;
+<a href="SKILL.md">Read the Skill</a> &nbsp;·&nbsp;
+<a href="README.zh-CN.md">简体中文</a>
+
+<br/><br/>
+
+<a href="https://github.com/Dreaminmaster/perspective-illusion-studio/actions/workflows/verify.yml"><img src="https://github.com/Dreaminmaster/perspective-illusion-studio/actions/workflows/verify.yml/badge.svg" alt="Repository checks" /></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-8da7cb?style=flat&labelColor=172139" alt="MIT License" /></a>
+<a href="https://threejs.org/"><img src="https://img.shields.io/badge/rendering-Three.js-8da7cb?style=flat&labelColor=172139" alt="Three.js" /></a>
 
 </div>
 
-<br/>
+---
 
-## A flat illustration. Until the camera moves.
+## Selected worlds
 
-What looks like a single, intricately drawn city is actually a complete **Three.js environment**. An extremely long lens visually compresses distant buildings, signs and pedestrians. Then the camera moves closer while its field of view opens — suddenly, every layer separates into real perspective.
-
-No replacement background. No sequence of AI-generated intermediate images. The reveal comes from a **physical camera transform applied to actual 3D geometry**.
+**Three original visual experiments. One camera language.** Every film below comes with its editable scene and rendering source; the videos are the results of real 3D renders, not animated reference stills.
 
 <table>
-<thead><tr>
-<th width="33%" align="center">01 · COMPRESS</th>
-<th width="33%" align="center">02 · UNFOLD</th>
-<th width="33%" align="center">03 · REVEAL AGAIN</th>
-</tr></thead>
-<tbody>
 <tr>
-<td><a href="assets/stills/01-flat.jpg"><img src="assets/stills/01-flat.jpg" alt="Shibuya: a flat-looking telephoto scene" /></a></td>
-<td><a href="assets/stills/02-reveal.jpg"><img src="assets/stills/02-reveal.jpg" alt="Shibuya: wide-angle crossing with real depth" /></a></td>
-<td><a href="assets/stills/03-corner.jpg"><img src="assets/stills/03-corner.jpg" alt="Shibuya: a new oblique viewpoint" /></a></td>
+<td width="33%" valign="top">
+  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/poster.jpg" width="100%" alt="AETERNA — an imagined Greco-Roman imperial forum at sunset" /></a>
+  <br/><br/>
+  <sub>01 &nbsp;/&nbsp; CLASSICAL WORLD</sub>
+  <h3>AETERNA</h3>
+  <p>An invented Greco-Roman capital. Marble temples, a triumphal arch, fountain and a city unfolding at sunset.</p>
+  <p><a href="scenes/aeterna-forum/aeterna_final.mp4"><strong>Watch film</strong></a> &nbsp;·&nbsp; <a href="scenes/aeterna-forum/">3D project</a></p>
+</td>
+<td width="33%" valign="top">
+  <a href="scenes/night-city-2077/night_city_2077.mp4"><img src="scenes/night-city-2077/poster.jpg" width="100%" alt="Night City 2077 — a fictional neon-futurist metropolis" /></a>
+  <br/><br/>
+  <sub>02 &nbsp;/&nbsp; FUTURISTIC WORLD</sub>
+  <h3>NIGHT CITY 2077</h3>
+  <p>Neon megastructures, aerial vehicles and holographic streets, inspired by cyberpunk aesthetics.</p>
+  <p><a href="scenes/night-city-2077/night_city_2077.mp4"><strong>Watch film</strong></a> &nbsp;·&nbsp; <a href="scenes/night-city-2077/">3D project</a></p>
+</td>
+<td width="33%" valign="top">
+  <a href="examples/shibuya-demo.mp4"><img src="assets/stills/02-reveal.jpg" width="100%" alt="Shibuya Scramble — stylised Tokyo street crossing" /></a>
+  <br/><br/>
+  <sub>03 &nbsp;/&nbsp; URBAN WORLD</sub>
+  <h3>SHIBUYA SCRAMBLE</h3>
+  <p>The original collaboration: a rain-soaked Tokyo-inspired crossing with signs, crowds and layered architecture.</p>
+  <p><a href="examples/shibuya-demo.mp4"><strong>Watch film</strong></a> &nbsp;·&nbsp; <a href="scene.html">3D scene</a></p>
+</td>
 </tr>
-<tr>
-<td align="center"><sub>2° long lens · compressed city</sub></td>
-<td align="center"><sub>78–84° dolly zoom · deep perspective</sub></td>
-<td align="center"><sub>30° yaw · secondary 3° → 58° reveal</sub></td>
-</tr>
-</tbody>
 </table>
 
-## 🎬 Tokyo — Shibuya Scramble
+<sub>All three showcase films: approximately 10 seconds · 1280 × 720 · 15 native FPS. The environments are stylised and fictionalised; they are not exact recreations of real places or game scenes.</sub>
+
+---
+
+## The illusion
+
+A perspective illusion is not a zoom applied to a finished image. The world is built in **three dimensions first**. From an extreme telephoto camera, the distance between its objects almost disappears. As the camera dollies and the lens opens, the same geometry reveals its depth.
+
+<table>
+<tr>
+<td width="33%"><img src="assets/stills/01-flat.jpg" width="100%" alt="2 degree telephoto flattens the Shibuya scene" /></td>
+<td width="33%"><img src="assets/stills/02-reveal.jpg" width="100%" alt="Wide-angle dolly zoom separates street layers" /></td>
+<td width="33%"><img src="assets/stills/03-corner.jpg" width="100%" alt="Oblique perspective reveals a second view" /></td>
+</tr>
+<tr>
+<td><strong>01 — Compress</strong><br/><sub>~2° telephoto. Buildings and people appear layered on one flat plane.</sub></td>
+<td><strong>02 — Unfold</strong><br/><sub>74–84° wide-angle reveal. The camera moves while the focal plane stays anchored.</sub></td>
+<td><strong>03 — Reframe</strong><br/><sub>A new oblique angle makes the hidden spatial relationships visible again.</sub></td>
+</tr>
+</table>
 
 <div align="center">
-
-<a href="examples/shibuya-demo.mp4"><img src="assets/shibuya-loop.gif" width="90%" alt="Animated Shibuya Scramble perspective-illusion loop from the original Three.js scene" /></a>
-
-<br/>
-
-<sub>Illustrated rain-soaked crossing · luminous signs · pedestrians · shifting lens compression</sub>
-
-<br/><br/>
-
-### [▶ Watch the complete Shibuya MP4](examples/shibuya-demo.mp4)
-
-<sub>Click the animated preview to open the video, or download the MP4 from GitHub.</sub>
-
+  <a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/preview.gif" width="76%" alt="AETERNA Greco-Roman forum — animated perspective reveal rendered in Three.js" /></a>
+  <br/>
+  <sub>Featured motion study: <a href="scenes/aeterna-forum/aeterna_final.mp4">AETERNA with original score</a> · <a href="scenes/aeterna-forum/storyboard.jpg">Camera storyboard</a></sub>
 </div>
 
 <br/>
 
-| | **Verified demo specifications** |
-|:--|:--|
-| **Scene** | Tokyo Shibuya-inspired crossing, stylized rather than geospatially exact |
-| **Runtime** | 10 seconds, seamless-intent camera sequence |
-| **Native render** | **1280 × 720** · **15 FPS** · H.264 |
-| **Perspective** | 2° → 78°/84° frontal dolly zoom, plus oblique 3° → 58° reveal |
-| **Engine** | Three.js with geometry, moving crowds, signage, rain and compositing |
-| **Frame generation** | Real 3D renders; **no optical-flow interpolation** |
-| **Known limitation** | Fine-line shimmer remains in some shots; higher native FPS and AA need more GPU time |
-
-> [!NOTE]
-> This scene is an **artistic interpretation of Shibuya**, not a survey-accurate digital replica of the intersection. Advertisements and illustrated characters are fictional.
-
-## 🏛️ Latest film · AETERNA, the Eternal Forum
-
-A completely **imagined Greco-Roman imperial capital**, created from real procedural Three.js architecture: marble streets, colonnades, triumphal arches, a sacred mountain temple, bronze sea-god fountain, market life and a lavender-gold Mediterranean sunset.
-
-<div align="center">
-
-<a href="scenes/aeterna-forum/aeterna_final.mp4"><img src="scenes/aeterna-forum/preview.gif" width="90%" alt="AETERNA Greco-Roman forum — original 3D flat-to-wide perspective-illusion film" /></a>
-
-<br/><br/>
-
-**[▶ Watch AETERNA · Finished MP4 with original classical soundtrack](scenes/aeterna-forum/aeterna_final.mp4)**
-
-[**Open the editable 3D project**](scenes/aeterna-forum/) &nbsp;·&nbsp; [**Read the scene notes**](scenes/aeterna-forum/README.md) &nbsp;·&nbsp; [**View the camera storyboard**](scenes/aeterna-forum/storyboard.jpg)
-
-<sub>10 seconds · 1280 × 720 · 15 native FPS · 2° long lens → 84° dolly zoom → 26° corner reveal</sub>
-
-</div>
-
-This original classical world demonstrates the Skill's actual multi-pass 3D renderer, not an animated still image. Fine-line shimmer and illustrative polygonal character details remain in this software-rendered sample. Original score composed algorithmically from lyre, flute, strings, temple chimes and fountain ambience.
-
-## 🌃 New showcase · Night City 2077
-
-An original **Cyberpunk 2077-inspired** animated neon megacity, made with the same reproducible Three.js camera skill — not game footage and not official game art.
-
-<div align="center">
-
-<a href="scenes/night-city-2077/night_city_2077.mp4"><img src="scenes/night-city-2077/preview.gif" width="90%" alt="Night City 2077 — looping neon futuristic 3D perspective illusion" /></a>
-
-<br/><br/>
-
-**[▶ Watch the finished video with original synth soundtrack](scenes/night-city-2077/night_city_2077.mp4)**
-
-[**Open the complete editable 3D source**](scenes/night-city-2077/) &nbsp;·&nbsp; [**Read scene notes**](scenes/night-city-2077/README.md)
-
-<sub>10 s · 1280 × 720 · 15 native FPS · 2° → 84° dolly zoom · −27° second reveal</sub>
-
-</div>
-
-Featuring original holographic ads, futuristic building towers, suspended skybridges, moving hovercars, rain-soaked street reflections and procedurally composed electronic ambience. All rendered from editable **real 3D geometry**, with no optical-flow interpolation. Fine line shimmer may remain due to software GPU antialiasing.
-
-## What we improved
-
-The [original Simcraft perspective-illusion technique](https://github.com/dotslashsimran/simcraft/tree/main/skills/video/perspective-illusion) provides the crucial camera model, Four-Pass illustration renderer, scene templates and loopable movement. This edition documents the additional changes developed through a hands-on Shibuya video iteration.
-
-| Core technique | Collaborative refinement |
-|:--|:--|
-| Telephoto flattening | Strengthened the initial compression to **2°** |
-| Camera dolly zoom | Rebuilt keyframes around **78°/84°**, making depth emergence obvious |
-| Corner views | Introduced a visually distinct **30° oblique** second reveal |
-| Illustrated night rendering | Reduced excessive haze, rain and bloom to retain architectural edges |
-| Quality / export process | Removed optical-flow frame interpolation responsible for warped and blurry transitions |
-| Repeatable skills | Added a portable **SKILL.md**, camera study, quality checks and a runnable demo project |
-
-### The camera, in one equation
-
-The focal plane stays approximately the same size within the composition while camera distance changes with lens angle:
+The underlying dolly-zoom relationship is:
 
 `D = (W / 2) / tan(FOV / 2)`
 
-Here `W` is the visible width at the focus plane. As the FOV widens and the camera approaches, hidden distance between near and far objects becomes legible. For the actual timeline, see [camera design](references/camera-design.md).
+Here `W` is the width at the focus plane, `FOV` is the horizontal field of view, and `D` is the camera-to-focus-plane distance. The Skill keeps this composition controlled while bringing out real parallax. See [camera design](references/camera-design.md).
 
-## 🧭 Explore Shibuya in 3D on your Mac
+## Built for repeatable production
 
-The video is only one way to see the scene. **You can now walk around the actual Three.js city yourself**, rotate the camera, inspect signs, and replay the cinematic lens illusion.
+<table>
+<tr>
+<td width="25%" valign="top"><strong>01 / MODEL</strong><br/><sub>Construct architecture, characters, signage and props with editable Three.js geometry.</sub></td>
+<td width="25%" valign="top"><strong>02 / DIRECT</strong><br/><sub>Animate telephoto compression, lens expansion and a secondary viewpoint.</sub></td>
+<td width="25%" valign="top"><strong>03 / RENDER</strong><br/><sub>Composite geometry, shadows, normals and outlines into illustrated frames.</sub></td>
+<td width="25%" valign="top"><strong>04 / VERIFY</strong><br/><sub>Review keyframes, motion continuity, loop joins and output metadata.</sub></td>
+</tr>
+</table>
 
-<div align="center">
+The renderer outputs **native 3D frames**, rather than inventing in-between images using optical-flow interpolation. This avoids the large shape distortions we encountered in early experiments, though fine-line shimmer can still appear with limited antialiasing or low native frame rates.
 
-[**⬇ Download the complete project ZIP**](https://github.com/Dreaminmaster/perspective-illusion-studio/archive/refs/heads/main.zip)
+---
 
-</div>
+## Get started
 
-**Mac one-click start (recommended)**
+**Explore an existing city, or build a new illusion.** The source is open and local; you do not need a hosted browser or paid video service.
 
-1. Download the full ZIP above and unzip it. Do not download `explore.html` alone.
-2. Open the folder and **double-click `start-mac.command`**. It checks Node.js and installs Three.js on first run. If macOS blocks it, right-click the script and choose *Open*.
-3. It opens `http://127.0.0.1:8765/explore.html?scale=.40` in your browser. Chrome is recommended.
-4. **Drag** to rotate · **right-drag** to pan · **scroll/pinch** to zoom · **W/A/S/D** to move · **Q/E** to descend/ascend · **Shift** to speed up · **F** to play the original dolly-zoom sequence · **R** to reset · **P** to pause.
-5. Close the launcher terminal (or press Ctrl+C) to stop the local-only server.
+### Path A — Explore Shibuya on your Mac
 
-> Requires Node.js 22+ ([install Node.js](https://nodejs.org/en/download)) and an internet connection for the first `npm ci`. The viewer itself is local. You do not need a remote cloud computer.
+[**Download the entire repository as ZIP**](https://github.com/Dreaminmaster/perspective-illusion-studio/archive/refs/heads/main.zip) · [Open interactive viewer source](explore.html)
 
-**Terminal alternative**
+Extract the folder and double-click **`start-mac.command`**. The launcher checks Node.js, installs dependencies the first time, then opens the interactive Three.js street viewer in your browser.
 
-~~~bash
-git clone https://github.com/Dreaminmaster/perspective-illusion-studio.git
-cd perspective-illusion-studio
-npm ci
-npm run explore
-# Open http://127.0.0.1:8765/explore.html?scale=.40
-~~~
+<sub>Controls: drag to orbit · right-drag to pan · scroll to zoom · W/A/S/D to move · Q/E for height · F to replay the cinematic camera · R to reset. Node.js 22+ is required; Chrome is recommended. The local server stops when you close its terminal.</sub>
 
-The interactive viewer is [`explore.html`](explore.html). It uses the **same 3D model, animated pedestrians, rain and stylised four-pass materials as the video**. It is intended for exploration, not an exact architectural replica. For lower GPU use, try `?scale=.30` in the URL.
-
-## ⚡ Quick start
-
-**Requirements:** Node.js 22+, FFmpeg, Chrome/Chromium and WebGL. Hardware graphics acceleration is recommended for high-quality rendering.
+### Path B — Run the Skill and render
 
 ~~~bash
 git clone https://github.com/Dreaminmaster/perspective-illusion-studio.git
@@ -188,63 +132,52 @@ cd perspective-illusion-studio
 npm ci
 npm test
 
-# Generate a quick preview
-npm run preview
+# Explore the local Three.js scene
+npm run explore
 
-# Render clearer, native scene frames
+# Or render the camera sequence into an MP4
+npm run preview
 npm run render:crisp
 ~~~
 
-The renderer defaults to `/usr/bin/google-chrome` on Linux. Set `CHROME_BIN` to your Chrome executable path on macOS or Windows. Rendering on a software-only GPU is possible but much slower.
+**Requirements:** Node.js 22+, Chrome/Chromium, FFmpeg and a working WebGL backend. For local Chrome outside Linux, set `CHROME_BIN` to the executable path. High-quality rendering benefits from GPU acceleration. For a step-by-step brief, start with [SKILL.md](SKILL.md).
 
-## Use it as an AI Skill
+> **Example brief:** “Use the Perspective Illusion Studio Skill to create a 10-second illustrated Venetian canal. Begin near 2° telephoto, unfold the scene with a true camera dolly zoom, then reveal it from a second angle. Show keyframes before rendering and deliver the editable Three.js project.”
 
-Open **[SKILL.md](SKILL.md)** and supply it to a coding assistant that supports skills or repository instructions. The skill captures the steps for building a scene that fools the eye, designing a dramatic lens reveal, inspecting its keyframes, rendering from actual 3D frames and checking the result.
+### Source map
 
-**Example creative brief**
-
-> Make a 10-second perspective illusion of a Kyoto station platform. Begin with a compressed 2° long-lens shot that resembles a flat illustration. Dolly forward into a wide 3D view, then reveal the platform again from an oblique angle. Preserve all editable Three.js source and present keyframe stills before final rendering.
-
-The repository is a **reusable Skill source package**. It does not automatically install itself as a permanent ChatGPT capability.
+| Start here | What it contains |
+|:--|:--|
+| [`SKILL.md`](SKILL.md) | The reusable filmmaking instructions for a coding assistant |
+| [`scene.html`](scene.html), [`render.mjs`](render.mjs) | Shibuya scene and native-frame video renderer |
+| [`explore.html`](explore.html) | Interactive local 3D viewer |
+| [`scenes/`](scenes/) | Night City and AETERNA, including films, source and audio |
+| [`references/`](references/) | Camera design and visual-quality checklist |
+| [`scripts/verify-skill.mjs`](scripts/verify-skill.mjs) | Automated repository checks |
 
 <details>
-<summary><strong>Project structure · click to expand</strong></summary>
+<summary><strong>Technical notes & limitations</strong></summary>
 
-~~~text
-perspective-illusion-studio/
-├── SKILL.md                     Full reusable AI filmmaking workflow
-├── scene.html                   Editable Tokyo / Shibuya 3D scene
-├── render.mjs                   Native-frame clear renderer
-├── render_fast.mjs              Sampled renderer based on Simcraft
-├── cutouts/                     12 original source illustration assets
-├── examples/
-│   ├── shibuya-demo.mp4          Complete 10-second MP4
-│   └── shibuya-keyframes.jpg    Camera-study storyboard
-├── assets/
-│   ├── hero.svg                  Project cover art
-│   ├── shibuya-loop.gif          Animated README preview
-│   └── stills/                   Flat / wide / oblique frames
-├── references/
-│   ├── camera-design.md          Lens choreography and rationale
-│   └── quality-checks.md         Render and visual QA
-├── scripts/                     Reusable verification scripts
-├── README.zh-CN.md              Chinese introduction
-├── CREDITS.md                   Origin and contributor credits
-└── LICENSE                      MIT license
-~~~
+- The three bundled films are illustrative demonstrations at **720p, 15 native FPS**, not 4K or 60 FPS.
+- Real 3D frames reduce interpolation warping; they do not guarantee flicker-free fine lines.
+- The Shibuya viewer is interactive. The other two scenes are provided as editable Three.js projects rather than ready-made free-roam apps.
+- The Skill is a set of instructions and files for compatible coding agents; this repository does **not** automatically install a permanent ChatGPT capability.
+- Fictionalised urban settings and cyberpunk motifs are independent visual interpretations; no official game assets are claimed.
 
 </details>
 
-## Provenance & thanks
+---
 
-Built on **[Simcraft · Perspective Illusion](https://github.com/dotslashsimran/simcraft/tree/main/skills/video/perspective-illusion)**, created by **Simran Sachdeva** (© 2026, MIT). The original license and copyright notice are preserved for reused source code and cut-out assets.
+## Origin & credits
 
-The Shibuya adaptation and iterative camera / rendering improvements were developed by **[Dreaminmaster](https://github.com/Dreaminmaster) in collaboration with ChatGPT**. See [CREDITS.md](CREDITS.md). This project does not claim authorship over the original Simcraft technique.
+**The foundation:** [Simcraft / perspective-illusion](https://github.com/dotslashsimran/simcraft/tree/main/skills/video/perspective-illusion), by **Simran Sachdeva** (© 2026, MIT). Its Three.js template, camera method and multipass rendering utilities form the upstream basis for this project.
+
+**The adaptation:** [Dreaminmaster](https://github.com/Dreaminmaster), working collaboratively with ChatGPT, developed the Shibuya demonstration and refined the lens choreography, clarity-oriented rendering workflow, reusable Skill documentation and additional scene experiments.
+
+Original attribution and licence are preserved in [LICENSE](LICENSE) and [CREDITS.md](CREDITS.md).
 
 <div align="center">
 
----
-
-<sub><em>Made to reveal what perspective hides.</em></sub>
+<sub>THREE WORLDS. ONE CAMERA LANGUAGE.</sub>
 
 </div>
