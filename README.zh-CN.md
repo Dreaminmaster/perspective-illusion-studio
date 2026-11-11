@@ -65,6 +65,50 @@
 
 > **场景说明：** 这是以涩谷十字路口为灵感的艺术化场景，并不是对真实建筑位置的精确复原。
 
+## 🧭 在 Mac 上自由探索涩谷三维街区
+
+现在除了观看视频，还可以**亲自控制摄像机探索我们建立的东京三维场景**。建筑、斑马线、广告招牌、行人、车辆和雨夜材质都来自同一套 Three.js 模型。
+
+### 一键下载与启动
+
+**[⬇ 下载完整项目 ZIP（GitHub，永久仓库地址）](https://github.com/Dreaminmaster/perspective-illusion-studio/archive/refs/heads/main.zip)**
+
+1. 下载完整 ZIP，解压成文件夹（不要只下载单独的 `explore.html`）。
+2. 打开文件夹，**双击 `start-mac.command`**。如果 macOS 阻止打开，请右键单击该脚本并选择“打开”。
+3. 第一次启动会检查 Node.js、自动安装项目依赖，然后自动打开网页。
+4. 浏览器地址为：`http://127.0.0.1:8765/explore.html?scale=.40`。建议使用 Chrome。
+5. 结束时关闭启动脚本的终端窗口，或按 Ctrl+C 停止本地服务器。
+
+**操作方式**
+
+| 操作 | 功能 |
+|:--|:--|
+| 鼠标左键拖动 | 自由旋转视角 |
+| 鼠标右键拖动 | 平移观察中心 |
+| 鼠标滚轮 / 触控板缩放 | 靠近或远离物体 |
+| **W A S D** | 前后左右移动 |
+| **Q / E** | 降低 / 升高镜头 |
+| **Shift** | 加速移动 |
+| **F** 或“播放透视镜头” | 自动播放原来的长焦到广角错觉 |
+| **R** | 重置视角 |
+| **P** | 暂停 / 继续行人动画 |
+| **保存截图** | 下载当前画面 PNG |
+
+**终端启动备选方案：**
+
+~~~bash
+git clone https://github.com/Dreaminmaster/perspective-illusion-studio.git
+cd perspective-illusion-studio
+npm ci
+npm run explore
+~~~
+
+然后访问 `http://127.0.0.1:8765/explore.html?scale=.40`。
+
+**注意：** 请先安装 [Node.js 22+](https://nodejs.org/en/download)。首次安装依赖需要联网，之后网页服务器只在本机运行。若画面比较卡顿，可以把网址里的 `scale=.40` 改成 `scale=.30`，减少实时渲染开销。
+
+这是可以旋转和探索的 Three.js 场景，但并非真实涩谷广场的精确建筑测绘模型，也不需要另外安装 Blender。
+
 ## ⚡ 开始使用
 
 **环境要求：** Node.js 22+、Google Chrome / Chromium、FFmpeg 和 WebGL。建议在具备硬件图形加速的电脑上制作最终版本。
